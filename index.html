@@ -1,0 +1,2144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>东北家常菜 · 雅集点菜谱</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Serif+SC:wght@600;700&display=swap');
+    :root {
+      --bg-paper: #f6f3ec;
+      --bg-card: #ffffff;
+      --ink-main: #1c1917;
+      --ink-muted: #78716c;
+      --cinnabar: #c83e2b;
+      --cinnabar-dark: #a62e1e;
+      --cinnabar-soft: #fff5f2;
+      --gold-accent: #b45309;
+    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background-color: var(--bg-paper);
+      background-image: radial-gradient( rgba(180, 140, 100, 0.07) 1px, transparent 0 );
+      background-size: 20px 20px;
+      color: var(--ink-main);
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+    .font-serif-cn {
+      font-family: "Noto Serif SC", "Songti SC", "STSong", Georgia, serif;
+    }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    .dish-card {
+      background: var(--bg-card);
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+    @media (hover: hover) {
+      .dish-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 28px -8px rgba(28, 25, 23, 0.10), 0 4px 10px -4px rgba(28, 25, 23, 0.05);
+      }
+    }
+    .dish-card:active { transform: scale(0.99); }
+    .dish-selected {
+      border-color: var(--cinnabar) !important;
+      background: linear-gradient(180deg, #ffffff 0%, #fff8f6 100%) !important;
+      box-shadow: 0 10px 26px -6px rgba(200, 62, 43, 0.18), 0 0 0 1px rgba(200, 62, 43, 0.25) !important;
+    }
+    .art-zoom svg {
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @media (hover: hover) {
+      .dish-card:hover .art-zoom svg {
+        transform: scale(1.045);
+      }
+    }
+    .toast-enter {
+      animation: toastPop 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes toastPop {
+      from { opacity: 0; transform: translate(-50%, 14px) scale(0.95); }
+      to { opacity: 1; transform: translate(-50%, 0) scale(1); }
+    }
+    .seal-badge {
+      background: linear-gradient(135deg, #d64531 0%, #b32d1b 100%);
+      box-shadow: 0 3px 10px rgba(185, 45, 27, 0.28), inset 0 1px 0 rgba(255,255,255,0.25);
+    }
+    .btn-cinnabar {
+      background: linear-gradient(135deg, #d1432f 0%, #b52f1d 100%);
+      box-shadow: 0 4px 14px -2px rgba(200, 62, 43, 0.38);
+    }
+    .btn-cinnabar:hover:not(:disabled) {
+      background: linear-gradient(135deg, #bd3926 0%, #9e2616 100%);
+    }
+    .btn-cinnabar:disabled {
+      background: #d6d3d1;
+      box-shadow: none;
+    }
+  </style>
+</head>
+<body class="min-h-screen pb-32">
+
+  <!-- Top Refined Sticky Header -->
+  <header class="sticky top-0 z-30 bg-[#fbf9f5]/95 backdrop-blur-md border-b border-stone-200/80 shadow-[0_2px_16px_rgba(28,25,23,0.04)]">
+    <div class="max-w-6xl mx-auto px-3 sm:px-6 pt-3 pb-2.5">
+      <!-- Brand Title & Actions -->
+      <div class="flex items-center justify-between gap-2 mb-2.5">
+        <div class="flex items-center gap-3 min-w-0">
+          <div class="w-10 h-10 rounded-xl seal-badge text-amber-50 flex flex-col items-center justify-center shrink-0 border border-red-800/20">
+            <span class="font-serif-cn font-bold text-base leading-none">食味</span>
+            <span class="text-[9px] tracking-widest opacity-85 mt-0.5">雅集</span>
+          </div>
+          <div class="min-w-0">
+            <div class="flex items-center gap-2">
+              <h1 class="font-serif-cn text-base sm:text-xl font-bold text-stone-900 truncate tracking-tight">东北家常菜 · 墙面点菜谱</h1>
+              <span class="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-amber-100/80 text-amber-900 border border-amber-200/70">全墙实录 102 味</span>
+            </div>
+            <p id="headerStats" class="text-xs text-stone-500 truncate mt-0.5">收录全墙 102 道菜品 · 点完一键复制纯菜名（自动剔除价格）</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-1.5 shrink-0">
+          <button type="button" id="openCustomModalBtn" class="px-3 py-1.5 rounded-xl text-xs font-semibold bg-white hover:bg-stone-100 text-stone-800 border border-stone-200/90 shadow-sm transition flex items-center gap-1">
+            <span>+ 加主食/自选</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Search + Zone + Mode Controls -->
+      <div class="flex flex-col md:flex-row gap-2">
+        <div class="relative flex-1">
+          <svg class="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path stroke-linecap="round" d="m21 21-4.3-4.3"></path>
+          </svg>
+          <input
+            id="searchInput"
+            type="text"
+            placeholder="搜菜名、食材或拼音首字母（如：地三鲜 / dsx / 肘子 / 鱼 / 豆腐）"
+            class="w-full pl-9 pr-8 py-2 text-xs sm:text-sm bg-white border border-stone-200/90 focus:border-[#c83e2b] focus:ring-2 focus:ring-[#c83e2b]/15 focus:outline-none rounded-xl shadow-[inset_0_1px_2px_rgba(0,0,0,0.02)] transition"
+          />
+          <button
+            type="button"
+            id="clearSearchBtn"
+            aria-label="清空搜索"
+            class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-stone-300 text-white text-xs items-center justify-center hover:bg-stone-400"
+          >×</button>
+        </div>
+
+        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+          <select
+            id="zoneSelect"
+            aria-label="按墙面位置筛选"
+            class="text-xs sm:text-sm bg-white border border-stone-200/90 text-stone-700 font-medium rounded-xl px-2.5 py-2 focus:outline-none focus:border-[#c83e2b] shrink-0"
+          >
+            <option value="all">全部墙面区域 (102)</option>
+            <option value="特色菜专区">特色菜+大公鸡 (11)</option>
+            <option value="绿框主菜单">绿框家常主菜单 (30)</option>
+            <option value="发光灯箱">发光灯箱墙·当前 (42)</option>
+            <option value="门口凉菜主食">门口竖牌·凉菜主食 (10)</option>
+            <option value="右侧单品海报">右侧单品贴画 (4)</option>
+            <option value="旧版灯箱补充">旧版灯箱替换菜 (5)</option>
+          </select>
+
+          <button
+            type="button"
+            id="togglePricedBtn"
+            class="px-2.5 py-2 rounded-xl text-xs font-medium border border-stone-200/90 bg-white text-stone-600 hover:bg-stone-50 whitespace-nowrap transition shrink-0"
+          >只看有价</button>
+
+          <button
+            type="button"
+            id="toggleImgBtn"
+            class="px-2.5 py-2 rounded-xl text-xs font-semibold border border-[#c83e2b]/40 bg-[#fff5f2] text-[#b52f1d] whitespace-nowrap transition shrink-0"
+          >配图开</button>
+        </div>
+      </div>
+
+      <!-- Culinary Category Tabs -->
+      <div id="categoryTabs" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pt-2.5 pb-0.5"></div>
+    </div>
+  </header>
+
+  <!-- Main Menu Gallery -->
+  <main class="max-w-6xl mx-auto px-3 sm:px-6 pt-3.5">
+    <!-- Quick Staple & Dining Helper Strip -->
+    <div class="mb-3.5 bg-white/90 backdrop-blur border border-stone-200/80 rounded-2xl px-3.5 py-2.5 flex flex-wrap items-center justify-between gap-2 shadow-sm">
+      <div class="flex items-center gap-1.5 flex-wrap text-xs">
+        <span class="text-stone-500 font-semibold mr-0.5">主食常备：</span>
+        <button type="button" data-quick-add="米饭" class="px-2.5 py-1 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200/70 font-medium transition">+ 米饭</button>
+        <button type="button" data-quick-add="大碴粥" class="px-2.5 py-1 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200/70 font-medium transition">+ 大碴粥</button>
+        <button type="button" data-quick-add="馒头" class="px-2.5 py-1 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-200/70 font-medium transition">+ 馒头</button>
+        <button type="button" data-quick-add="餐具/打包盒" class="px-2.5 py-1 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-700 font-medium transition">+ 打包盒</button>
+      </div>
+      <div id="balanceHintBar" class="text-[11px] text-stone-500 font-medium">
+        点菜贴士：点选插画可放大鉴赏并加单品忌口；灯箱未标清项可点击补记实价
+      </div>
+    </div>
+
+    <!-- Dish Grid -->
+    <div id="dishGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4"></div>
+
+    <!-- Empty Filter State -->
+    <div id="emptyState" class="hidden py-20 text-center bg-white/70 rounded-3xl border border-stone-200/70 my-4">
+      <div class="w-16 h-16 mx-auto mb-3 rounded-2xl bg-amber-50 border border-amber-200/60 flex items-center justify-center text-2xl">🥢</div>
+      <p class="font-serif-cn text-stone-800 font-bold text-base mb-1">未寻得匹配的菜肴</p>
+      <p class="text-stone-500 text-xs mb-4">可重置筛选条件，或点击右上角“+ 加主食/自选”直接录入</p>
+      <button type="button" id="resetFiltersBtn" class="px-4 py-2 rounded-xl bg-stone-900 text-white text-xs font-semibold hover:bg-stone-800 transition">
+        重置筛选条件
+      </button>
+    </div>
+  </main>
+
+  <!-- Floating Refined Bottom Bar -->
+  <div class="fixed bottom-0 inset-x-0 z-30 pointer-events-none pb-2 sm:pb-3 px-2.5 sm:px-6">
+    <div class="max-w-5xl mx-auto bg-[#1c1917]/95 backdrop-blur-md text-stone-100 rounded-2xl sm:rounded-3xl shadow-[0_12px_36px_rgba(0,0,0,0.26)] border border-stone-700/70 px-3.5 sm:px-5 py-2.5 flex items-center justify-between gap-2.5 pointer-events-auto">
+      <button
+        type="button"
+        id="openCartBtn"
+        class="flex items-center gap-3 min-w-0 text-left group py-0.5"
+      >
+        <div class="relative w-11 h-11 rounded-2xl bg-stone-800 border border-stone-700 text-amber-100 flex items-center justify-center shrink-0 group-hover:bg-stone-700 transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2"></path>
+          </svg>
+          <span id="cartBadge" class="hidden absolute -top-1.5 -right-1.5 min-w-[21px] h-[21px] px-1 rounded-full bg-[#e04f3a] text-white text-[11px] font-bold items-center justify-center shadow">0</span>
+        </div>
+        <div class="min-w-0">
+          <div id="cartSummaryTitle" class="text-sm font-bold text-white truncate">暂未点菜</div>
+          <div id="cartSummarySub" class="text-[11px] sm:text-xs text-stone-400 truncate">轻触菜品卡片 + 号即可加入点菜单</div>
+        </div>
+      </button>
+
+      <div class="flex items-center gap-2 shrink-0">
+        <button
+          type="button"
+          id="openDrawerActionBtn"
+          class="px-3 sm:px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-stone-800 hover:bg-stone-700 text-stone-200 border border-stone-700 transition"
+        >已点明细</button>
+        <button
+          type="button"
+          id="quickCopyBtn"
+          class="px-3.5 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold btn-cinnabar text-white transition flex items-center gap-1.5"
+        >
+          <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+          <span>复制菜名</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dish Detail & Large Artwork Preview Modal -->
+  <div id="detailModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div id="detailModalBackdrop" class="absolute inset-0 bg-stone-950/60 backdrop-blur-[2px]"></div>
+    <div class="relative bg-[#fbf9f5] rounded-3xl shadow-2xl w-full max-w-md overflow-hidden z-10 border border-stone-200">
+      <button type="button" id="closeDetailModalBtn" aria-label="关闭详情" class="absolute top-3 right-3 z-20 w-8 h-8 rounded-full bg-black/45 hover:bg-black/65 text-white flex items-center justify-center text-lg leading-none backdrop-blur">×</button>
+      <div id="detailArtBox" class="w-full aspect-[12/8] bg-stone-100 overflow-hidden border-b border-stone-200/80"></div>
+      <div class="p-5">
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <div id="detailMetaBadges" class="flex items-center gap-1.5 flex-wrap mb-1.5"></div>
+            <h3 id="detailDishTitle" class="font-serif-cn text-xl font-bold text-stone-900"></h3>
+          </div>
+          <div id="detailPriceArea" class="text-right shrink-0"></div>
+        </div>
+
+        <div class="mt-4 pt-3.5 border-t border-stone-200/80">
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-xs font-semibold text-stone-600">单品口味备注（复制菜名时可选附带）</span>
+            <div class="flex gap-1">
+              <button type="button" data-detail-flavor="微辣" class="px-2 py-0.5 rounded-md bg-white border border-stone-200 text-[11px] text-stone-600 hover:border-[#c83e2b]">微辣</button>
+              <button type="button" data-detail-flavor="免葱蒜" class="px-2 py-0.5 rounded-md bg-white border border-stone-200 text-[11px] text-stone-600 hover:border-[#c83e2b]">免葱蒜</button>
+              <button type="button" data-detail-flavor="少盐" class="px-2 py-0.5 rounded-md bg-white border border-stone-200 text-[11px] text-stone-600 hover:border-[#c83e2b]">少盐</button>
+            </div>
+          </div>
+          <input id="detailNoteInput" type="text" placeholder="例如：多加醋、不要香菜、先上..." class="w-full px-3 py-2 text-xs bg-white border border-stone-200 rounded-xl focus:outline-none focus:border-[#c83e2b]" />
+        </div>
+
+        <div class="mt-4 flex items-center justify-between gap-3">
+          <button type="button" id="detailEditPriceBtn" class="px-3 py-2 rounded-xl text-xs font-medium bg-stone-200/70 hover:bg-stone-200 text-stone-700 transition">
+            修改/补记单价
+          </button>
+          <div id="detailStepperBox" class="flex items-center gap-2"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cart & Copy Preview Drawer Modal -->
+  <div id="cartDrawer" class="hidden fixed inset-0 z-40">
+    <div id="cartBackdrop" class="absolute inset-0 bg-stone-950/55 backdrop-blur-[2px]"></div>
+    <div class="absolute inset-x-0 bottom-0 sm:inset-y-6 sm:max-w-xl sm:mx-auto bg-[#fbf9f5] rounded-t-3xl sm:rounded-3xl shadow-2xl flex flex-col max-h-[89vh] sm:max-h-[90vh] overflow-hidden border border-stone-200">
+      <!-- Drawer Header -->
+      <div class="px-4 sm:px-5 py-3.5 bg-white border-b border-stone-200/90 flex items-center justify-between">
+        <div>
+          <h2 class="font-serif-cn text-base sm:text-lg font-bold text-stone-900">已点菜单 & 纯菜名导出</h2>
+          <p id="drawerSubHeader" class="text-xs text-stone-500">复制文本已自动过滤全部价格信息</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button type="button" id="clearCartBtn" class="px-2.5 py-1 rounded-lg text-xs font-medium text-red-700 hover:bg-red-50 transition">
+            清空已点
+          </button>
+          <button type="button" id="closeCartBtn" aria-label="关闭弹窗" class="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 flex items-center justify-center text-lg leading-none">
+            ×
+          </button>
+        </div>
+      </div>
+
+      <!-- Drawer Scrollable Body -->
+      <div class="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4">
+        <!-- Meal Structure Summary Pill -->
+        <div id="drawerStructureBar" class="hidden bg-amber-50/90 border border-amber-200/80 rounded-2xl px-3.5 py-2 text-xs text-amber-950 font-medium"></div>
+
+        <!-- Ordered Items List -->
+        <div id="cartItemsList" class="space-y-2.5"></div>
+
+        <!-- Overall Dining Note -->
+        <div class="bg-white rounded-2xl p-3.5 border border-stone-200/80 shadow-sm">
+          <div class="flex items-center justify-between mb-1.5 gap-2 flex-wrap">
+            <label for="overallNoteInput" class="text-xs font-bold text-stone-700">整单忌口 / 用餐备注（可选）</label>
+            <div class="flex gap-1 flex-wrap">
+              <button type="button" data-overall-tag="微辣" class="px-2 py-0.5 rounded-md bg-stone-50 border border-stone-200 text-[11px] text-stone-600 hover:border-[#c83e2b]">微辣</button>
+              <button type="button" data-overall-tag="少油少盐" class="px-2 py-0.5 rounded-md bg-stone-50 border border-stone-200 text-[11px] text-stone-600 hover:border-[#c83e2b]">少油少盐</button>
+              <button type="button" data-overall-tag="免香菜" class="px-2 py-0.5 rounded-md bg-stone-50 border border-stone-200 text-[11px] text-stone-600 hover:border-[#c83e2b]">免香菜</button>
+            </div>
+          </div>
+          <input
+            id="overallNoteInput"
+            type="text"
+            placeholder="例如：不要香菜、先上凉菜、4人用餐..."
+            class="w-full px-3 py-1.5 text-xs bg-stone-50 border border-stone-200 rounded-xl focus:bg-white focus:outline-none focus:border-[#c83e2b]"
+          />
+        </div>
+
+        <!-- Copy Format Settings & Live Text Preview -->
+        <div class="bg-white rounded-2xl p-3.5 border border-[#c83e2b]/25 shadow-sm">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-2.5">
+            <span class="text-xs font-bold text-stone-800">复制排版格式（严格不含价格）</span>
+            <div class="inline-flex rounded-xl bg-stone-100 p-0.5 border border-stone-200 text-xs">
+              <button type="button" data-copy-fmt="lines" class="copy-fmt-btn px-2.5 py-1 rounded-lg font-medium transition">每行一菜</button>
+              <button type="button" data-copy-fmt="inline" class="copy-fmt-btn px-2.5 py-1 rounded-lg font-medium transition">顿号单行</button>
+              <button type="button" data-copy-fmt="numbered" class="copy-fmt-btn px-2.5 py-1 rounded-lg font-medium transition">带序号</button>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-4 mb-2.5 text-xs text-stone-700">
+            <label class="inline-flex items-center gap-1.5 cursor-pointer select-none">
+              <input type="checkbox" id="includeQtyCheckbox" checked class="rounded text-[#c83e2b] focus:ring-[#c83e2b]" />
+              <span>多份显示数量（如 ×2）</span>
+            </label>
+            <label class="inline-flex items-center gap-1.5 cursor-pointer select-none">
+              <input type="checkbox" id="includeNoteCheckbox" checked class="rounded text-[#c83e2b] focus:ring-[#c83e2b]" />
+              <span>附带口味备注</span>
+            </label>
+          </div>
+
+          <textarea
+            id="copyPreviewArea"
+            readonly
+            rows="4"
+            aria-label="复制菜名预览"
+            class="w-full p-3 text-xs sm:text-sm bg-[#fbf9f5] border border-stone-200 rounded-xl text-stone-800 font-medium focus:outline-none resize-none leading-relaxed"
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- Drawer Footer -->
+      <div class="p-4 border-t border-stone-200 bg-white flex items-center justify-between gap-3">
+        <div class="text-xs text-stone-600">
+          <div>参考合计：<span id="drawerTotalAmount" class="text-lg font-bold text-stone-900">¥0</span></div>
+          <div id="drawerUnpricedHint" class="text-[11px] text-amber-700"></div>
+        </div>
+        <button
+          type="button"
+          id="drawerCopyBtn"
+          class="px-5 py-2.5 rounded-xl btn-cinnabar text-white text-sm font-bold transition flex items-center gap-1.5"
+        >
+          <span>一键复制菜名（不含价格）</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Dish / Price Edit Modal -->
+  <div id="editModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div id="editModalBackdrop" class="absolute inset-0 bg-stone-950/55 backdrop-blur-[1px]"></div>
+    <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-sm p-5 z-10 border border-stone-200">
+      <h3 id="editModalTitle" class="font-serif-cn text-base font-bold text-stone-900 mb-3">添加自定义菜品 / 主食</h3>
+
+      <div id="customDishFields" class="space-y-3">
+        <div>
+          <label for="customDishName" class="block text-xs font-medium text-stone-600 mb-1">菜品或主食名称 *</label>
+          <input id="customDishName" type="text" placeholder="如：米饭、拍黄瓜、加宽粉..." class="w-full px-3 py-2 text-sm border border-stone-300 rounded-xl focus:outline-none focus:border-[#c83e2b]" />
+        </div>
+        <div>
+          <label for="customDishPrice" class="block text-xs font-medium text-stone-600 mb-1">参考单价（元，选填，可留空）</label>
+          <input id="customDishPrice" type="number" min="0" step="1" placeholder="不填则仅记菜名" class="w-full px-3 py-2 text-sm border border-stone-300 rounded-xl focus:outline-none focus:border-[#c83e2b]" />
+        </div>
+      </div>
+
+      <div id="priceEditFields" class="hidden space-y-3">
+        <p id="priceEditDishLabel" class="text-sm text-stone-800 font-semibold"></p>
+        <div>
+          <label for="overridePriceInput" class="block text-xs font-medium text-stone-600 mb-1">补充店内实价（元，留空恢复未标清）</label>
+          <input id="overridePriceInput" type="number" min="0" step="1" placeholder="输入数字价格，如 28" class="w-full px-3 py-2 text-sm border border-stone-300 rounded-xl focus:outline-none focus:border-[#c83e2b]" />
+        </div>
+      </div>
+
+      <div class="mt-5 flex justify-end gap-2">
+        <button type="button" id="cancelModalBtn" class="px-4 py-2 rounded-xl text-xs font-medium bg-stone-100 hover:bg-stone-200 text-stone-700">取消</button>
+        <button type="button" id="confirmModalBtn" class="px-4 py-2 rounded-xl text-xs font-semibold btn-cinnabar text-white">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toastBox" class="hidden fixed bottom-24 left-1/2 -translate-x-1/2 z-50 px-4 py-2.5 rounded-2xl bg-stone-900/95 text-amber-50 text-xs sm:text-sm font-medium shadow-xl border border-stone-700 items-center gap-2 pointer-events-none">
+    <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+    <span id="toastText">已复制菜名</span>
+  </div>
+
+  <script>
+    const CATEGORIES = [
+      { id: 'all', label: '全部菜品' },
+      { id: 'special', label: '招牌硬菜' },
+      { id: 'meat', label: '肉食热炒' },
+      { id: 'pot', label: '干锅·铁板·炖菜' },
+      { id: 'seafood', label: '江河海鲜' },
+      { id: 'homestyle', label: '家常蛋蔬' },
+      { id: 'veg', label: '清爽素食·豆腐' },
+      { id: 'cold_staple', label: '凉拌·汤羹·主食' },
+      { id: 'legacy', label: '旧灯箱寻味' }
+    ];
+
+    const INITIAL_DISHES = [
+      // === 特色菜专区 + 左侧大公鸡海报 (11项) ===
+      { id: 'sp_1', name: '霸王肘子', price: 55, cat: 'special', zone: '特色菜专区', pos: '特色 R1C1', py: 'bwzz' },
+      { id: 'sp_2', name: '大厨红烧肉', price: 45, cat: 'special', zone: '特色菜专区', pos: '特色 R1C2', py: 'dchsr' },
+      { id: 'sp_3', name: '椒盐水煮鱼（龙利鱼）', price: 42, cat: 'special', zone: '特色菜专区', pos: '特色 R1C3', py: 'jyszy lly' },
+      { id: 'sp_4', name: '笨鸡炖鹿茸菇粉', price: 42, cat: 'special', zone: '特色菜专区', pos: '特色 R2C1', py: 'bjdlrgf' },
+      { id: 'sp_5', name: '黄金烤脊骨', price: 42, cat: 'special', zone: '特色菜专区', pos: '特色 R2C2', py: 'hjkjg' },
+      { id: 'sp_6', name: '新派炝锅鳕鱼', price: 28, cat: 'special', zone: '特色菜专区', pos: '特色 R2C3', py: 'xpqgxy' },
+      { id: 'sp_7', name: '老式干炸肉段', price: 25, cat: 'special', zone: '特色菜专区', pos: '特色 R3C1', py: 'lsgzrd' },
+      { id: 'sp_8', name: '干锅鸡', price: 26, cat: 'special', zone: '特色菜专区', pos: '特色 R3C2', py: 'ggj' },
+      { id: 'sp_9', name: '砂锅粉丝煲', price: 18, cat: 'special', zone: '特色菜专区', pos: '特色 R3C3', py: 'sgfsb' },
+      { id: 'sp_10', name: '炖大公鸡（半只）', price: null, cat: 'special', zone: '特色菜专区', pos: '左侧黄牌', py: 'ddgj bz' },
+      { id: 'sp_11', name: '炖大公鸡（整只）', price: null, cat: 'special', zone: '特色菜专区', pos: '左侧黄牌', py: 'ddgj zz' },
+
+      // === 绿框家常菜主菜单 (30项，价格全部清晰) ===
+      { id: 'gm_1', name: '麻辣豆腐', price: 6, cat: 'veg', zone: '绿框主菜单', pos: '绿框 R1C1', py: 'mldf' },
+      { id: 'gm_2', name: '小炒笨豆芽', price: 6, cat: 'veg', zone: '绿框主菜单', pos: '绿框 R1C2', py: 'xcbdy' },
+      { id: 'gm_3', name: '家常土豆丝', price: 7, cat: 'veg', zone: '绿框主菜单', pos: '绿框 R1C3', py: 'jctds' },
+      { id: 'gm_4', name: '尖椒干豆腐', price: 7, cat: 'veg', zone: '绿框主菜单', pos: '绿框 R1C4', py: 'jjgdf' },
+      { id: 'gm_5', name: '酸菜炒粉', price: 8, cat: 'homestyle', zone: '绿框主菜单', pos: '绿框 R1C5', py: 'sccf' },
+      { id: 'gm_6', name: '孜然实蛋', price: 10, cat: 'homestyle', zone: '绿框主菜单', pos: '绿框 R1C6', py: 'zrsd' },
+      { id: 'gm_7', name: '火爆大头菜', price: 10, cat: 'veg', zone: '绿框主菜单', pos: '绿框 R1C7', py: 'hbdtc' },
+      { id: 'gm_8', name: '酱茄子', price: 10, cat: 'veg', zone: '绿框主菜单', pos: '绿框 R2C1', py: 'jqz' },
+      { id: 'gm_9', name: '地三鲜', price: 10, cat: 'veg', zone: '绿框主菜单', pos: '绿框 R2C2', py: 'dsx' },
+      { id: 'gm_10', name: '红烧日本豆腐', price: 10, cat: 'veg', zone: '绿框主菜单', pos: '绿框 R2C3', py: 'hsrbdf' },
+      { id: 'gm_11', name: '酱炒鸡蛋', price: 10, cat: 'homestyle', zone: '绿框主菜单', pos: '绿框 R2C4', py: 'jcjd' },
+      { id: 'gm_12', name: '韭菜炒鸡蛋', price: 10, cat: 'homestyle', zone: '绿框主菜单', pos: '绿框 R2C5', py: 'jccjd' },
+      { id: 'gm_13', name: '木须肉', price: 14, cat: 'meat', zone: '绿框主菜单', pos: '绿框 R2C6', py: 'mxr' },
+      { id: 'gm_14', name: '宫保鸡丁', price: 15, cat: 'meat', zone: '绿框主菜单', pos: '绿框 R2C7', py: 'gbjd' },
+      { id: 'gm_15', name: '香肠炒鸡蛋', price: 14, cat: 'homestyle', zone: '绿框主菜单', pos: '绿框 R3C1', py: 'xccjd' },
+      { id: 'gm_16', name: '干煸护心肢', price: 25, cat: 'meat', zone: '绿框主菜单', pos: '绿框 R3C2', py: 'gbhxz hxr' },
+      { id: 'gm_17', name: '尖椒护心肢', price: 20, cat: 'meat', zone: '绿框主菜单', pos: '绿框 R3C2', py: 'jjhxz hxr' },
+      { id: 'gm_18', name: '孜然肉片', price: 20, cat: 'meat', zone: '绿框主菜单', pos: '绿框 R3C3', py: 'zrrp' },
+      { id: 'gm_19', name: '鱼香肉丝', price: 16, cat: 'meat', zone: '绿框主菜单', pos: '绿框 R3C4', py: 'yxrs' },
+      { id: 'gm_20', name: '肉段烧茄子', price: 14, cat: 'homestyle', zone: '绿框主菜单', pos: '绿框 R3C5', py: 'rdsqz' },
+      { id: 'gm_21', name: '麻辣护心肉锅', price: 28, cat: 'pot', zone: '绿框主菜单', pos: '绿框 R3C6', py: 'mlhxrg' },
+      { id: 'gm_22', name: '梅菜扣肉', price: 26, cat: 'meat', zone: '绿框主菜单', pos: '绿框 R3C7', py: 'mckr' },
+      { id: 'gm_23', name: '酱焖鲫鱼', price: 35, cat: 'seafood', zone: '绿框主菜单', pos: '绿框 R4C1', py: 'jmjy' },
+      { id: 'gm_24', name: '铁板韭香鱿鱼', price: 28, cat: 'pot', zone: '绿框主菜单', pos: '绿框 R4C2', py: 'tbjxyy' },
+      { id: 'gm_25', name: '干炸刀鱼', price: 16, cat: 'seafood', zone: '绿框主菜单', pos: '绿框 R4C3', py: 'gzdy' },
+      { id: 'gm_26', name: '红烧刀鱼', price: 16, cat: 'seafood', zone: '绿框主菜单', pos: '绿框 R4C3', py: 'hsdy' },
+      { id: 'gm_27', name: '香辣全腰', price: 25, cat: 'meat', zone: '绿框主菜单', pos: '绿框 R4C4', py: 'xlqy' },
+      { id: 'gm_28', name: '紫菜蛋花汤', price: 10, cat: 'cold_staple', zone: '绿框主菜单', pos: '绿框 R4C5', py: 'zcdht' },
+      { id: 'gm_29', name: '当家豆腐', price: 15, cat: 'veg', zone: '绿框主菜单', pos: '绿框 R4C6', py: 'djdf' },
+      { id: 'gm_30', name: '水煮木耳爆五花', price: 28, cat: 'meat', zone: '绿框主菜单', pos: '绿框 R4C7', py: 'szmebwh' },
+
+      // === 门口竖版菜单 · 凉菜·汤·主食 (10项，价格全部清晰) ===
+      { id: 'cs_1', name: '家常凉菜', price: 12, cat: 'cold_staple', zone: '门口凉菜主食', pos: '门口 R1C1', py: 'jclc' },
+      { id: 'cs_2', name: '麻酱拉皮', price: 12, cat: 'cold_staple', zone: '门口凉菜主食', pos: '门口 R1C2', py: 'mjlp' },
+      { id: 'cs_3', name: '陈醋花生米', price: 12, cat: 'cold_staple', zone: '门口凉菜主食', pos: '门口 R2C1', py: 'cchsm' },
+      { id: 'cs_4', name: '炝拌土豆丝', price: 10, cat: 'cold_staple', zone: '门口凉菜主食', pos: '门口 R2C2', py: 'qbtds' },
+      { id: 'cs_5', name: '皮蛋豆腐', price: 12, cat: 'cold_staple', zone: '门口凉菜主食', pos: '门口 R3C1', py: 'pddf' },
+      { id: 'cs_6', name: '肉帽豆腐', price: 12, cat: 'cold_staple', zone: '门口凉菜主食', pos: '门口 R3C2', py: 'rmdf' },
+      { id: 'cs_7', name: '自制血肠', price: 18, cat: 'cold_staple', zone: '门口凉菜主食', pos: '门口 R4C1', py: 'zzxc' },
+      { id: 'cs_8', name: '圆葱干豆腐丝', price: 8, cat: 'cold_staple', zone: '门口凉菜主食', pos: '门口 R4C2', py: 'ycgdfs' },
+      { id: 'cs_9', name: '疙瘩汤', price: 15, cat: 'cold_staple', zone: '门口凉菜主食', pos: '门口 R5C1', py: 'gdt' },
+      { id: 'cs_10', name: '驴肉蒸饺', price: 18, cat: 'cold_staple', zone: '门口凉菜主食', pos: '门口 R5C2', py: 'lrzj' },
+
+      // === 右侧四张单品海报 (4项) ===
+      { id: 'rp_1', name: '小米土豆丝', price: 12, cat: 'veg', zone: '右侧单品海报', pos: '右侧贴画 1', py: 'xmtds' },
+      { id: 'rp_2', name: '配饭肉沫粉条', price: null, cat: 'homestyle', zone: '右侧单品海报', pos: '右侧贴画 2', py: 'pfrmft' },
+      { id: 'rp_3', name: '熏干豆腐炒鸡蛋', price: 12, cat: 'homestyle', zone: '右侧单品海报', pos: '右侧贴画 3', py: 'xgdfcjd' },
+      { id: 'rp_4', name: '油淋炝拌干豆腐丝', price: null, cat: 'cold_staple', zone: '右侧单品海报', pos: '右侧贴画 4', py: 'ylqbgdfs' },
+
+      // === 发光灯箱墙 · 当前版 (40格共42项) ===
+      { id: 'lb_1', name: '老式熘肉段', price: null, cat: 'meat', zone: '发光灯箱', pos: '灯箱 R1C1', py: 'lslrd' },
+      { id: 'lb_2', name: '回锅肉', price: 18, cat: 'meat', zone: '发光灯箱', pos: '灯箱 R1C2', py: 'hgr' },
+      { id: 'lb_3', name: '农家脊骨干豆腐', price: null, cat: 'pot', zone: '发光灯箱', pos: '灯箱 R1C3', py: 'njjggdf' },
+      { id: 'lb_4', name: '压锅菜', price: null, cat: 'pot', zone: '发光灯箱', pos: '灯箱 R1C4', py: 'ygc' },
+      { id: 'lb_5', name: '毛葱炒鸡蛋', price: null, cat: 'homestyle', zone: '发光灯箱', pos: '灯箱 R1C5', py: 'mccjd' },
+      { id: 'lb_6', name: '干煸三样', price: null, cat: 'meat', zone: '发光灯箱', pos: '灯箱 R1C6', py: 'gbsy' },
+      { id: 'lb_7', name: '干煸鱿鱼薯条', price: null, cat: 'seafood', zone: '发光灯箱', pos: '灯箱 R1C7', py: 'gbyyst' },
+      { id: 'lb_8', name: '干煸河虾', price: null, cat: 'seafood', zone: '发光灯箱', pos: '灯箱 R1C8', py: 'gbhx' },
+      { id: 'lb_9', name: '手撕包菜', price: null, cat: 'veg', zone: '发光灯箱', pos: '灯箱 R1C9', py: 'ssbc' },
+      { id: 'lb_10', name: '荤素下饭小炒', price: 20, cat: 'meat', zone: '发光灯箱', pos: '灯箱 R1C10', py: 'hsxfxc' },
+
+      { id: 'lb_11', name: '川香辣子鸡', price: null, cat: 'meat', zone: '发光灯箱', pos: '灯箱 R2C1', py: 'cxlzj' },
+      { id: 'lb_12', name: '香叶小排骨', price: null, cat: 'meat', zone: '发光灯箱', pos: '灯箱 R2C2', py: 'xyxpg' },
+      { id: 'lb_13', name: '干煸蚕蛹', price: null, cat: 'meat', zone: '发光灯箱', pos: '灯箱 R2C3', py: 'gbcy' },
+      { id: 'lb_14', name: '酸菜鱼', price: null, cat: 'seafood', zone: '发光灯箱', pos: '灯箱 R2C4', py: 'scy' },
+      { id: 'lb_15', name: '干煸豆角', price: 16, cat: 'veg', zone: '发光灯箱', pos: '灯箱 R2C5', py: 'gbdj' },
+      { id: 'lb_16', name: '杀猪烩菜', price: null, cat: 'pot', zone: '发光灯箱', pos: '灯箱 R2C6', py: 'szhc' },
+      { id: 'lb_17', name: '五花肉煎酸菜', price: null, cat: 'meat', zone: '发光灯箱', pos: '灯箱 R2C7', py: 'whrjsc' },
+      { id: 'lb_18', name: '小炒黄牛肉', price: null, cat: 'meat', zone: '发光灯箱', pos: '灯箱 R2C8', py: 'xchnr' },
+      { id: 'lb_19', name: '干锅护心肉千叶豆腐', price: null, cat: 'pot', zone: '发光灯箱', pos: '灯箱 R2C9', py: 'gghxrqydf' },
+      { id: 'lb_20', name: '石板鸡蛋', price: null, cat: 'pot', zone: '发光灯箱', pos: '灯箱 R2C10', py: 'sbjd' },
+      { id: 'lb_21', name: '石板豆腐', price: null, cat: 'pot', zone: '发光灯箱', pos: '灯箱 R2C10', py: 'sbdf' },
+
+      { id: 'lb_22', name: '五花肉冻豆腐大白菜', price: 15, cat: 'pot', zone: '发光灯箱', pos: '灯箱 R3C1', py: 'whrddfdbbc' },
+      { id: 'lb_23', name: '金牌滋味肉', price: null, cat: 'special', zone: '发光灯箱', pos: '灯箱 R3C2', py: 'jpzwr' },
+      { id: 'lb_24', name: '干煸肠子', price: null, cat: 'meat', zone: '发光灯箱', pos: '灯箱 R3C3', py: 'gbcz' },
+      { id: 'lb_25', name: '老式香酥鸡', price: null, cat: 'special', zone: '发光灯箱', pos: '灯箱 R3C4', py: 'lsxsj' },
+      { id: 'lb_26', name: '水煮肉片', price: null, cat: 'meat', zone: '发光灯箱', pos: '灯箱 R3C5', py: 'szrp' },
+      { id: 'lb_27', name: '湘味肥肠', price: null, cat: 'meat', zone: '发光灯箱', pos: '灯箱 R3C6', py: 'xwfc' },
+      { id: 'lb_28', name: '铁板时蔬牛肉', price: null, cat: 'pot', zone: '发光灯箱', pos: '灯箱 R3C7', py: 'tbssnr' },
+      { id: 'lb_29', name: '蒸肉卧蛋', price: null, cat: 'meat', zone: '发光灯箱', pos: '灯箱 R3C8', py: 'zrwd' },
+      { id: 'lb_30', name: '老家豆腐', price: null, cat: 'veg', zone: '发光灯箱', pos: '灯箱 R3C9', py: 'ljdf' },
+      { id: 'lb_31', name: '金牌蒜香茄', price: null, cat: 'special', zone: '发光灯箱', pos: '灯箱 R3C10', py: 'jpsxq' },
+
+      { id: 'lb_32', name: '湘辣鸡胗', price: 18, cat: 'meat', zone: '发光灯箱', pos: '灯箱 R4C1', py: 'xljz' },
+      { id: 'lb_33', name: '老式香辣肉丝', price: null, cat: 'meat', zone: '发光灯箱', pos: '灯箱 R4C2', py: 'lsxlrs' },
+      { id: 'lb_34', name: '剁椒鸡蛋', price: null, cat: 'homestyle', zone: '发光灯箱', pos: '灯箱 R4C3', py: 'djjd' },
+      { id: 'lb_35', name: '黄蘑土豆片', price: null, cat: 'homestyle', zone: '发光灯箱', pos: '灯箱 R4C4', py: 'hmtdp' },
+      { id: 'lb_36', name: '养生小炒', price: null, cat: 'homestyle', zone: '发光灯箱', pos: '灯箱 R4C5', py: 'ysxc' },
+      { id: 'lb_37', name: '水煮鱼', price: null, cat: 'seafood', zone: '发光灯箱', pos: '灯箱 R4C6', py: 'szy' },
+      { id: 'lb_38', name: '川味烤鱼', price: null, cat: 'seafood', zone: '发光灯箱', pos: '灯箱 R4C6', py: 'cwky' },
+      { id: 'lb_39', name: '海杂鱼', price: 25, cat: 'seafood', zone: '发光灯箱', pos: '灯箱 R4C7', py: 'hzy' },
+      { id: 'lb_40', name: '家常炖排骨', price: null, cat: 'meat', zone: '发光灯箱', pos: '灯箱 R4C8', py: 'jcdpg' },
+      { id: 'lb_41', name: '熘肚片', price: null, cat: 'meat', zone: '发光灯箱', pos: '灯箱 R4C9', py: 'ldp' },
+      { id: 'lb_42', name: '麻辣鳕鱼', price: null, cat: 'seafood', zone: '发光灯箱', pos: '灯箱 R4C10', py: 'mlxy' },
+
+      // === 旧版灯箱照片补充菜品 (5项，来自首张墙面灯箱图) ===
+      { id: 'lg_1', name: '狮子头酸菜粉', price: null, cat: 'legacy', zone: '旧版灯箱补充', pos: '旧灯箱 R1C3', py: 'sztscf' },
+      { id: 'lg_2', name: '干锅肥肠', price: null, cat: 'legacy', zone: '旧版灯箱补充', pos: '旧灯箱 R2C9', py: 'ggfc' },
+      { id: 'lg_3', name: '铁板大头菜炒鸡蛋香肠', price: null, cat: 'legacy', zone: '旧版灯箱补充', pos: '旧灯箱 R3C2', py: 'tbdtccjdxc' },
+      { id: 'lg_4', name: '火爆腰花', price: null, cat: 'legacy', zone: '旧版灯箱补充', pos: '旧灯箱 R3C3', py: 'hbyh' },
+      { id: 'lg_5', name: '雪绵豆沙', price: null, cat: 'legacy', zone: '旧版灯箱补充', pos: '旧灯箱 R3C6', py: 'xmds' }
+    ];
+
+    const STORAGE_KEY = 'wall_menu_order_state_v1';
+
+    const state = {
+      activeCategory: 'all',
+      activeZone: 'all',
+      searchQuery: '',
+      onlyPriced: false,
+      showImages: true,
+      cart: {},
+      customDishes: [],
+      priceOverrides: {},
+      copyFormat: 'lines',
+      copyIncludeQty: true,
+      copyIncludeNotes: true,
+      overallNote: '',
+      clearConfirmPending: false,
+      modalMode: 'custom',
+      editingDishId: null,
+      detailDishId: null
+    };
+
+    function loadSavedState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === 'object') {
+          if (parsed.cart && typeof parsed.cart === 'object') state.cart = parsed.cart;
+          if (Array.isArray(parsed.customDishes)) state.customDishes = parsed.customDishes;
+          if (parsed.priceOverrides && typeof parsed.priceOverrides === 'object') state.priceOverrides = parsed.priceOverrides;
+          if (['lines', 'inline', 'numbered'].includes(parsed.copyFormat)) state.copyFormat = parsed.copyFormat;
+          if (typeof parsed.copyIncludeQty === 'boolean') state.copyIncludeQty = parsed.copyIncludeQty;
+          if (typeof parsed.copyIncludeNotes === 'boolean') state.copyIncludeNotes = parsed.copyIncludeNotes;
+          if (typeof parsed.overallNote === 'string') state.overallNote = parsed.overallNote;
+          if (typeof parsed.showImages === 'boolean') state.showImages = parsed.showImages;
+        }
+      } catch (e) {}
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          cart: state.cart,
+          customDishes: state.customDishes,
+          priceOverrides: state.priceOverrides,
+          copyFormat: state.copyFormat,
+          copyIncludeQty: state.copyIncludeQty,
+          copyIncludeNotes: state.copyIncludeNotes,
+          overallNote: state.overallNote,
+          showImages: state.showImages
+        }));
+      } catch (e) {}
+    }
+
+    function hashCode(str) {
+      let h = 2166136261;
+      for (let i = 0; i < str.length; i++) {
+        h ^= str.charCodeAt(i);
+        h = Math.imul(h, 16777619);
+      }
+      return h >>> 0;
+    }
+
+    // High-Craft Boutique Culinary SVG Renderer (240x168 editorial food photography composition)
+    function renderDishSvg(dish, scopePrefix) {
+      const name = dish.name || '';
+      const uid = (scopePrefix || 'g') + '_' + dish.id.replace(/[^a-zA-Z0-9_]/g, '');
+      const seed = hashCode(dish.id + name);
+      const rand = (n) => ((seed >>> (n % 17)) & 255) / 255;
+
+      // Ambient tabletop atmosphere by category
+      let bgTop = '#f8f2e8', bgBot = '#ece0cf', matColor = '#dfd0bc', accentCorner = '#d6bfa3';
+      if (dish.cat === 'special') { bgTop = '#fdf4eb'; bgBot = '#f3dfc9'; matColor = '#e4c7a6'; accentCorner = '#c83e2b'; }
+      else if (dish.cat === 'seafood') { bgTop = '#f1f6f9'; bgBot = '#dce8ef'; matColor = '#c5d8e4'; accentCorner = '#3b82f6'; }
+      else if (dish.cat === 'veg') { bgTop = '#f3f7f0'; bgBot = '#e1eadb'; matColor = '#cad9c1'; accentCorner = '#15803d'; }
+      else if (dish.cat === 'cold_staple') { bgTop = '#faf6ed'; bgBot = '#ede4d1'; matColor = '#ddd0b6'; accentCorner = '#b45309'; }
+      else if (dish.cat === 'pot') { bgTop = '#f7efe9'; bgBot = '#e8d7cb'; matColor = '#d6beae'; accentCorner = '#9a3412'; }
+
+      // Determine authentic Northeast serving vessel
+      let vessel = 'plate';
+      if (/铁板|石板/.test(name)) vessel = 'sizzle';
+      else if (/烤鱼/.test(name)) vessel = 'tray';
+      else if (/干锅|砂锅|烩菜|大白菜|鹿茸菇|压锅|脊骨干豆腐|护心肉锅|炖大公鸡|炖排骨|狮子头/.test(name)) vessel = 'pot';
+      else if (/蒸饺|馒头/.test(name)) vessel = 'steamer';
+      else if (/水煮|酸菜鱼|汤|粥/.test(name)) vessel = 'bowl';
+      else if (/打包盒/.test(name)) vessel = 'box';
+
+      // Subtle bamboo table mat & chopsticks corner props for editorial realism
+      const tableDecor = `
+        <line x1="0" y1="142" x2="240" y2="142" stroke="${matColor}" stroke-width="0.8" opacity="0.55"/>
+        <path d="M188 14 L236 38 M194 9 L238 31" stroke="#854d27" stroke-width="2.6" stroke-linecap="round" opacity="0.48"/>
+        <path d="M188 14 L204 22 M194 9 L210 17" stroke="#d4a373" stroke-width="2.6" stroke-linecap="round" opacity="0.55"/>
+        <circle cx="28" cy="24" r="3" fill="${accentCorner}" opacity="0.18"/>
+      `;
+
+      let vesselSvg = '';
+      if (vessel === 'sizzle') {
+        vesselSvg = `
+          <ellipse cx="120" cy="100" rx="92" ry="50" fill="#1c1917" opacity="0.18"/>
+          <!-- Teak wooden base -->
+          <rect x="24" y="40" width="192" height="104" rx="22" fill="#7c471e"/>
+          <rect x="27" y="36" width="186" height="102" rx="20" fill="url(#wood_${uid})" stroke="#9a5b28" stroke-width="1.5"/>
+          <rect x="16" y="75" width="14" height="24" rx="5" fill="#6b3c18"/>
+          <rect x="210" y="75" width="14" height="24" rx="5" fill="#6b3c18"/>
+          <!-- Matte cast-iron oval skillet -->
+          <ellipse cx="120" cy="87" rx="80" ry="44" fill="#18181b" stroke="#3f3f46" stroke-width="2.8"/>
+          <ellipse cx="120" cy="88" rx="72" ry="38" fill="#27272a"/>
+          <ellipse cx="120" cy="89" rx="66" ry="33" fill="#3b180c" opacity="0.65"/>
+        `;
+      } else if (vessel === 'tray') {
+        vesselSvg = `
+          <rect x="24" y="42" width="192" height="104" rx="16" fill="#0f172a" opacity="0.16"/>
+          <!-- Brushed stainless steel grilled-fish tray -->
+          <rect x="22" y="34" width="196" height="104" rx="15" fill="url(#steel_${uid})" stroke="#94a3b8" stroke-width="2"/>
+          <rect x="13" y="72" width="10" height="28" rx="4" fill="#64748b"/>
+          <rect x="217" y="72" width="10" height="28" rx="4" fill="#64748b"/>
+          <rect x="31" y="43" width="178" height="86" rx="10" fill="#7f1d1d"/>
+          <rect x="34" y="46" width="172" height="80" rx="8" fill="url(#chiliBroth_${uid})"/>
+        `;
+      } else if (vessel === 'pot') {
+        vesselSvg = `
+          <ellipse cx="120" cy="103" rx="82" ry="46" fill="#1c1917" opacity="0.22"/>
+          <!-- Twin iron/clay ears -->
+          <path d="M36 74 C18 72 18 96 37 95" stroke="#292524" stroke-width="6.5" fill="none" stroke-linecap="round"/>
+          <path d="M204 74 C222 72 222 96 203 95" stroke="#292524" stroke-width="6.5" fill="none" stroke-linecap="round"/>
+          <!-- Glazed casserole pot -->
+          <ellipse cx="120" cy="92" rx="80" ry="47" fill="#1c1917"/>
+          <ellipse cx="120" cy="86" rx="79" ry="44" fill="#292524" stroke="#57534e" stroke-width="2.5"/>
+          <ellipse cx="120" cy="86" rx="70" ry="38" fill="${/大白菜|烩菜|鹿茸菇|狮子头/.test(name) ? '#b45309' : '#7c2d12'}"/>
+          <path d="M56 64 A74 40 0 0 1 184 64" stroke="#78716c" stroke-width="1.4" fill="none" opacity="0.45"/>
+        `;
+      } else if (vessel === 'steamer') {
+        vesselSvg = `
+          <ellipse cx="120" cy="100" rx="80" ry="46" fill="#451a03" opacity="0.18"/>
+          <ellipse cx="120" cy="92" rx="78" ry="45" fill="#b07d4f"/>
+          <ellipse cx="120" cy="85" rx="78" ry="44" fill="#deb887" stroke="#9c6644" stroke-width="2.5"/>
+          <ellipse cx="120" cy="86" rx="68" ry="37" fill="#c69264" stroke="#8b5a2b" stroke-width="1.5"/>
+          <!-- Woven bamboo slats -->
+          <path d="M56 75 H184 M52 86 H188 M56 97 H184 M66 108 H174" stroke="#a47148" stroke-width="1.4" opacity="0.7"/>
+          <path d="M85 52 V120 M108 49 V122 M132 49 V122 M155 52 V120" stroke="#b07d4f" stroke-width="1.2" opacity="0.5"/>
+        `;
+      } else if (vessel === 'bowl') {
+        const soupFill = /紫菜|疙瘩/.test(name) ? `url(#eggBroth_${uid})` : (/酸菜鱼/.test(name) ? `url(#goldBroth_${uid})` : (/粥/.test(name) ? '#fcd34d' : `url(#chiliBroth_${uid})`));
+        vesselSvg = `
+          <ellipse cx="120" cy="102" rx="84" ry="46" fill="#292524" opacity="0.16"/>
+          <ellipse cx="120" cy="92" rx="83" ry="47" fill="#e7e5e4"/>
+          <ellipse cx="120" cy="85" rx="82" ry="45" fill="#ffffff" stroke="#d6d3d1" stroke-width="2"/>
+          <ellipse cx="120" cy="85" rx="75" ry="40" fill="none" stroke="#1e40af" stroke-width="1" opacity="0.28" stroke-dasharray="6 3"/>
+          <ellipse cx="120" cy="86" rx="71" ry="37" fill="${soupFill}"/>
+        `;
+      } else if (vessel === 'box') {
+        vesselSvg = `
+          <rect x="52" y="44" width="136" height="90" rx="16" fill="#000000" opacity="0.1"/>
+          <rect x="48" y="38" width="144" height="88" rx="16" fill="#ffffff" stroke="#d6d3d1" stroke-width="2.2"/>
+          <rect x="58" y="48" width="124" height="68" rx="10" fill="#fafaf9" stroke="#e7e5e4" stroke-width="1.5"/>
+          <line x1="120" y1="48" x2="120" y2="116" stroke="#e7e5e4" stroke-width="2"/>
+        `;
+      } else {
+        // Classic artisanal porcelain plate with inner glaze shadow & fine gold/blue rim
+        const rimAccent = dish.cat === 'special' ? '#d97706' : '#64748b';
+        vesselSvg = `
+          <ellipse cx="120" cy="100" rx="84" ry="47" fill="#292524" opacity="0.14"/>
+          <ellipse cx="120" cy="88" rx="84" ry="46" fill="url(#plateRim_${uid})" stroke="#d6d3d1" stroke-width="1.6"/>
+          <ellipse cx="120" cy="88" rx="77" ry="41" fill="none" stroke="${rimAccent}" stroke-width="0.9" opacity="0.32"/>
+          <ellipse cx="120" cy="89" rx="68" ry="35" fill="url(#plateWell_${uid})" stroke="#f1f0ec" stroke-width="1"/>
+        `;
+      }
+
+      // Garnish helpers
+      const sesame = (pts) => pts.map(([x,y,rot]) =>
+        `<ellipse cx="${x}" cy="${y}" rx="2.1" ry="1.1" transform="rotate(${rot||20} ${x} ${y})" fill="#fffbeb"/>`
+      ).join('');
+
+      const scallionRings = (pts) => pts.map(([x,y]) =>
+        `<circle cx="${x}" cy="${y}" r="3.2" fill="#16a34a"/><circle cx="${x}" cy="${y}" r="1.4" fill="#bbf7d0"/>`
+      ).join('');
+
+      const chiliRings = (pts) => pts.map(([x,y]) =>
+        `<circle cx="${x}" cy="${y}" r="3.4" fill="#dc2626"/><circle cx="${x}" cy="${y}" r="1.3" fill="#fca5a5"/>`
+      ).join('');
+
+      // Detailed Culinary Food Composition (30+ bespoke archetypes)
+      let foodSvg = '';
+
+      if (/米饭/.test(name)) {
+        const grains = [[106,72],[118,68],[130,73],[112,80],[125,79],[102,84],[136,83],[118,87],[109,64],[124,63]];
+        foodSvg = `
+          <path d="M74 95 Q120 34 166 95 Z" fill="#ffffff" stroke="#e7e5e4" stroke-width="1.5"/>
+          <path d="M82 92 Q120 42 158 92 Z" fill="#fafaf9"/>
+          ${grains.map(([x,y], i) => `<ellipse cx="${x}" cy="${y}" rx="4.2" ry="2" transform="rotate(${i*23-30} ${x} ${y})" fill="#f1f5f9"/>`).join('')}
+          <circle cx="117" cy="67" r="2" fill="#1c1917"/><circle cx="124" cy="71" r="1.8" fill="#1c1917"/><circle cx="114" cy="74" r="1.7" fill="#1c1917"/>
+          <path d="M70 92 Q120 128 170 92 Z" fill="#1e3a8a"/>
+          <path d="M73 94 Q120 104 167 94" stroke="#93c5fd" stroke-width="2" fill="none" opacity="0.6"/>
+        `;
+      } else if (/蒸饺/.test(name)) {
+        const pos = [[120,64],[86,73],[154,73],[76,92],[120,86],[164,92],[98,105],[142,105]];
+        foodSvg = pos.map(([x,y], idx) => `
+          <g transform="translate(${x},${y}) rotate(${(idx%3-1)*8})">
+            <ellipse cx="0" cy="4" rx="18" ry="9" fill="#78350f" opacity="0.2"/>
+            <path d="M-17 4 C-16 -12, 16 -12, 17 4 C12 11, -12 11, -17 4 Z" fill="#fffdf7" stroke="#e5d5c0" stroke-width="1.3"/>
+            <ellipse cx="0" cy="2" rx="9" ry="4.5" fill="#d97706" opacity="0.16"/>
+            <path d="M-12 -1 Q-6 -6 0 -2 Q6 -6 12 -1" stroke="#dccab2" stroke-width="1.3" fill="none"/>
+            <path d="M-8 -3 L-6 1 M0 -4 L0 1 M8 -3 L6 1" stroke="#cbb598" stroke-width="1.1" stroke-linecap="round"/>
+          </g>
+        `).join('');
+      } else if (/馒头/.test(name)) {
+        foodSvg = `
+          <g transform="translate(96,80)"><ellipse cx="0" cy="6" rx="24" ry="15" fill="#78350f" opacity="0.18"/><path d="M-23 6 C-23 -18, 23 -18, 23 6 C23 15, -23 15, -23 6 Z" fill="#fffbeb" stroke="#ecd9b8" stroke-width="1.5"/><path d="M-10 -6 Q0 -11 10 -6" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" fill="none"/></g>
+          <g transform="translate(144,80)"><ellipse cx="0" cy="6" rx="24" ry="15" fill="#78350f" opacity="0.18"/><path d="M-23 6 C-23 -18, 23 -18, 23 6 C23 15, -23 15, -23 6 Z" fill="#fffbeb" stroke="#ecd9b8" stroke-width="1.5"/><path d="M-10 -6 Q0 -11 10 -6" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" fill="none"/></g>
+          <g transform="translate(120,98)"><ellipse cx="0" cy="6" rx="25" ry="15" fill="#78350f" opacity="0.2"/><path d="M-24 6 C-24 -19, 24 -19, 24 6 C24 15, -24 15, -24 6 Z" fill="#fef3c7" stroke="#e5cda3" stroke-width="1.5"/><path d="M-10 -6 Q0 -11 10 -6" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" fill="none"/></g>
+        `;
+      } else if (/霸王肘子|肘子/.test(name)) {
+        const greens = [[68,94,-25],[80,106,-10],[162,94,25],[152,106,10],[120,113,0]];
+        foodSvg = `
+          <!-- Rich mahogany reduction sauce pool -->
+          <ellipse cx="120" cy="95" rx="58" ry="27" fill="url(#braiseGlaze_${uid})"/>
+          <!-- Emerald bok choy bed -->
+          ${greens.map(([x,y,r]) => `
+            <g transform="translate(${x},${y}) rotate(${r})">
+              <ellipse cx="0" cy="0" rx="13" ry="8" fill="#15803d"/>
+              <ellipse cx="2" cy="1" rx="8" ry="4.5" fill="#4ade80"/>
+            </g>
+          `).join('')}
+          <!-- Monumental glazed pork knuckle -->
+          <path d="M74 98 C78 52, 102 42, 124 44 C148 46, 164 62, 166 98 C148 112, 92 112, 74 98 Z" fill="url(#braiseMeat_${uid})" stroke="#5c1909" stroke-width="1.4"/>
+          <!-- Cross-hatched skin texture & specular wet highlights -->
+          <path d="M92 66 Q120 58 148 68 M86 80 Q120 72 154 82 M90 93 Q120 86 150 94" stroke="#451a03" stroke-width="1.3" fill="none" opacity="0.45"/>
+          <path d="M102 54 Q112 82 106 102 M122 50 Q130 80 126 104 M140 56 Q146 82 142 100" stroke="#451a03" stroke-width="1.2" fill="none" opacity="0.38"/>
+          <path d="M98 56 Q118 49 136 57" stroke="#ffedd5" stroke-width="3.5" stroke-linecap="round" fill="none" opacity="0.72"/>
+          <path d="M106 68 Q122 64 134 70" stroke="#ffffff" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.55"/>
+          ${sesame([[112,62,15],[124,60,-20],[130,66,35],[116,74,-10],[128,76,25]])}
+          ${scallionRings([[118,69],[126,73],[110,78]])}
+        `;
+      } else if (/红烧肉|梅菜扣肉/.test(name)) {
+        const isKouRou = /扣肉/.test(name);
+        if (isKouRou) {
+          const slices = [-30,-18,-6,6,18,30];
+          foodSvg = `
+            <ellipse cx="120" cy="95" rx="56" ry="26" fill="#291509"/>
+            <!-- Preserved mustard greens base -->
+            <ellipse cx="120" cy="94" rx="48" ry="21" fill="#3f230f"/>
+            <!-- Fanned pork belly dome -->
+            ${slices.map((dx, i) => `
+              <g transform="translate(${120 + dx}, ${84 + Math.abs(dx)*0.16}) rotate(${dx*0.35})">
+                <rect x="-8" y="-22" width="16" height="36" rx="4" fill="#7c2d12" stroke="#451a03" stroke-width="1"/>
+                <rect x="-7" y="-14" width="14" height="5" fill="#fed7aa" opacity="0.82"/>
+                <rect x="-7" y="-2" width="14" height="4" fill="#fdba74" opacity="0.65"/>
+                <line x1="-4" y1="-19" x2="4" y2="-19" stroke="#fff7ed" stroke-width="1.6" stroke-linecap="round" opacity="0.6"/>
+              </g>
+            `).join('')}
+            ${scallionRings([[114,76],[125,79],[120,70]])}
+          `;
+        } else {
+          const cubes = [[94,76,-10],[118,71,6],[142,76,14],[84,90,-16],[108,86,4],[132,87,-8],[154,91,12],[98,100,8],[122,99,-6],[142,100,10]];
+          foodSvg = `
+            <ellipse cx="120" cy="94" rx="55" ry="26" fill="url(#braiseGlaze_${uid})"/>
+            ${cubes.map(([x,y,rot]) => `
+              <g transform="translate(${x},${y}) rotate(${rot})">
+                <rect x="-12" y="-10" width="24" height="19" rx="4.5" fill="#7c2d12" stroke="#451a03" stroke-width="1"/>
+                <rect x="-11" y="-10" width="22" height="5" rx="2.5" fill="#c2410c"/>
+                <rect x="-11" y="-5" width="22" height="4" fill="#fed7aa" opacity="0.88"/>
+                <rect x="-7" y="-8.5" width="10" height="2" rx="1" fill="#ffffff" opacity="0.55"/>
+              </g>
+            `).join('')}
+            ${scallionRings([[115,82],[128,85],[106,92]])}
+          `;
+        }
+      } else if (/蒸肉卧蛋/.test(name)) {
+        const angles = [0, 45, 90, 135, 180, 225, 270, 315];
+        foodSvg = `
+          <ellipse cx="120" cy="89" rx="63" ry="32" fill="#d97706" opacity="0.32"/>
+          ${angles.map(deg => {
+            const rad = deg * Math.PI / 180;
+            const x = (120 + 44 * Math.cos(rad)).toFixed(1);
+            const y = (88 + 21 * Math.sin(rad)).toFixed(1);
+            return `
+              <ellipse cx="${x}" cy="${y}" rx="14" ry="9.5" fill="#fffdf9" stroke="#fde68a" stroke-width="0.9"/>
+              <ellipse cx="${x}" cy="${y}" rx="7.2" ry="5.5" fill="url(#yolk_${uid})"/>
+              <circle cx="${(Number(x)-2).toFixed(1)}" cy="${(Number(y)-1.5).toFixed(1)}" r="1.8" fill="#ffffff" opacity="0.75"/>
+            `;
+          }).join('')}
+          <!-- Central savory steamed sliced pork mound -->
+          <ellipse cx="120" cy="88" rx="27" ry="15" fill="#7c2d12"/>
+          ${[-10,-3,4,11].map((dx,i) => `
+            <rect x="${110+dx}" y="${78+(i%2)*2}" width="16" height="18" rx="4" transform="rotate(${dx*1.4} ${118+dx} 87)" fill="#9a3412" stroke="#fed7aa" stroke-width="0.8"/>
+          `).join('')}
+          ${scallionRings([[116,85],[125,88],[120,92],[112,90]])}
+        `;
+      } else if (/雪绵豆沙/.test(name)) {
+        const clouds = [[94,74],[120,69],[146,75],[82,89],[108,85],[134,86],[158,90],[96,100],[122,98],[144,100]];
+        foodSvg = `
+          <ellipse cx="120" cy="94" rx="56" ry="25" fill="#e2e8f0" opacity="0.45"/>
+          ${clouds.map(([x,y]) => `
+            <g transform="translate(${x},${y})">
+              <ellipse cx="0" cy="4" rx="15" ry="10" fill="#cbd5e1" opacity="0.45"/>
+              <ellipse cx="0" cy="0" rx="15" ry="12" fill="url(#meringue_${uid})" stroke="#fef3c7" stroke-width="1"/>
+              <ellipse cx="-4" cy="-4" rx="6" ry="3.5" fill="#ffffff" opacity="0.9"/>
+              <circle cx="3" cy="-2" r="0.9" fill="#ffffff"/><circle cx="-2" cy="2" r="0.9" fill="#ffffff"/>
+            </g>
+          `).join('')}
+        `;
+      } else if (/麻酱拉皮/.test(name)) {
+        foodSvg = `
+          <!-- 6-color julienned ring -->
+          <path d="M120 88 L62 72 A60 32 0 0 1 102 57 Z" fill="#6b21a8"/>
+          <path d="M120 88 L102 57 A60 32 0 0 1 148 59 Z" fill="#15803d"/>
+          <path d="M120 88 L148 59 A60 32 0 0 1 178 84 Z" fill="#ea580c"/>
+          <path d="M120 88 L178 84 A60 32 0 0 1 146 117 Z" fill="#eab308"/>
+          <path d="M120 88 L146 117 A60 32 0 0 1 88 115 Z" fill="#292524"/>
+          <path d="M120 88 L88 115 A60 32 0 0 1 62 72 Z" fill="#22c55e"/>
+          <!-- Translucent crystal mung-bean sheets center -->
+          <ellipse cx="120" cy="88" rx="34" ry="19" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.2"/>
+          <path d="M96 85 Q120 76 144 86 M98 92 Q120 83 142 93" stroke="#ffffff" stroke-width="3" fill="none" opacity="0.8"/>
+          <!-- Rich drizzled sesame paste ribbons -->
+          <ellipse cx="120" cy="88" rx="22" ry="12" fill="#78350f"/>
+          <path d="M92 84 Q120 74 148 86 Q118 92 96 95 Q124 98 144 92" stroke="#92400e" stroke-width="3.6" stroke-linecap="round" fill="none"/>
+          <path d="M98 85 Q120 78 142 87" stroke="#d97706" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.75"/>
+          ${sesame([[115,85,10],[124,88,-25],[119,91,40]])}
+          ${scallionRings([[120,86]])}
+        `;
+      } else if (/自制血肠|血肠/.test(name)) {
+        const ring = [0,40,80,120,160,200,240,280,320];
+        foodSvg = `
+          <ellipse cx="120" cy="91" rx="56" ry="26" fill="#4c0519" opacity="0.25"/>
+          ${ring.map(deg => {
+            const rad = deg * Math.PI / 180;
+            const x = (120 + 36 * Math.cos(rad)).toFixed(1);
+            const y = (89 + 17 * Math.sin(rad)).toFixed(1);
+            return `
+              <ellipse cx="${x}" cy="${y}" rx="15" ry="10" fill="#4c0519" stroke="#881337" stroke-width="1.3"/>
+              <ellipse cx="${(Number(x)-3).toFixed(1)}" cy="${(Number(y)-2).toFixed(1)}" rx="6" ry="3" fill="#fb7185" opacity="0.32"/>
+            `;
+          }).join('')}
+          <ellipse cx="120" cy="88" rx="17" ry="11" fill="#580822" stroke="#9f1239" stroke-width="1.3"/>
+          <path d="M104 86 Q120 76 136 88 M108 92 Q122 82 132 94 M114 80 L126 95" stroke="#86efac" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+          <path d="M112 85 L128 89" stroke="#ef4444" stroke-width="2" stroke-linecap="round"/>
+        `;
+      } else if (/陈醋花生米|花生米/.test(name)) {
+        const nuts = Array.from({length: 26}, (_, i) => {
+          const ang = i * 2.39996;
+          const dist = Math.sqrt(i / 26) * 44;
+          return [120 + dist * Math.cos(ang), 89 + dist * 0.52 * Math.sin(ang), (i * 37) % 180];
+        });
+        foodSvg = `
+          <ellipse cx="120" cy="92" rx="52" ry="25" fill="#290f05" opacity="0.58"/>
+          ${nuts.map(([x,y,r], i) => `
+            <g transform="translate(${x.toFixed(1)},${y.toFixed(1)}) rotate(${r})">
+              <ellipse cx="0" cy="0" rx="7.2" ry="4.8" fill="${i%2?'#881337':'#7c2d12'}" stroke="#450a0a" stroke-width="0.7"/>
+              <ellipse cx="-2" cy="-1.3" rx="2.8" ry="1.2" fill="#fda4af" opacity="0.45"/>
+            </g>
+          `).join('')}
+          ${scallionRings([[110,84],[126,88],[118,95],[132,82],[105,92]])}
+          ${chiliRings([[120,83],[113,90]])}
+        `;
+      } else if (/烤鱼|酱焖鲫鱼|刀鱼|海杂鱼/.test(name)) {
+        const isRibbon = /刀鱼/.test(name);
+        if (isRibbon) {
+          const segs = [[-28,80,-14],[0,86,-10],[28,92,-6],[-14,97,12],[18,100,15]];
+          foodSvg = `
+            <ellipse cx="120" cy="92" rx="56" ry="25" fill="${/红烧/.test(name) ? '#7c2d12' : '#fef3c7'}" opacity="${/红烧/.test(name) ? '0.68' : '0.45'}"/>
+            ${segs.map(([dx,y,rot]) => `
+              <g transform="translate(${120+dx},${y}) rotate(${rot})">
+                <rect x="-24" y="-7.5" width="48" height="15" rx="4" fill="${/红烧/.test(name) ? '#b45309' : '#eab308'}" stroke="#92400e" stroke-width="1.1"/>
+                <line x1="-14" y1="-6" x2="-9" y2="6" stroke="#fde68a" stroke-width="1.2" opacity="0.7"/>
+                <line x1="0" y1="-6" x2="5" y2="6" stroke="#fde68a" stroke-width="1.2" opacity="0.7"/>
+                <line x1="14" y1="-6" x2="19" y2="6" stroke="#fde68a" stroke-width="1.2" opacity="0.7"/>
+              </g>
+            `).join('')}
+            ${scallionRings([[112,85],[128,90],[120,80]])}
+            ${chiliRings([[104,90],[135,84]])}
+          `;
+        } else {
+          foodSvg = `
+            <ellipse cx="120" cy="91" rx="62" ry="28" fill="#7f1d1d" opacity="0.65"/>
+            <!-- Whole braised / grilled fish with score marks -->
+            <path d="M56 90 C78 64, 134 64, 164 82 L188 68 L180 89 L189 109 L164 96 C134 114, 78 112, 56 90 Z" fill="url(#braiseMeat_${uid})" stroke="#451a03" stroke-width="1.5"/>
+            <path d="M84 76 L76 100 M102 73 L94 103 M120 73 L112 103 M138 76 L130 100" stroke="#fed7aa" stroke-width="1.8" stroke-linecap="round" opacity="0.62"/>
+            <circle cx="71" cy="87" r="3.2" fill="#fffbeb"/><circle cx="70" cy="87" r="1.6" fill="#1c1917"/>
+            <path d="M88 79 Q122 72 150 82" stroke="#ffedd5" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.55"/>
+            ${scallionRings([[102,86],[118,90],[134,85],[148,91]])}
+            ${chiliRings([[94,92],[126,82],[142,94]])}
+            ${sesame([[110,82,20],[128,89,-15],[115,95,30]])}
+          `;
+        }
+      } else if (/水煮鱼|酸菜鱼|鳕鱼/.test(name)) {
+        const fillets = [[92,76,-12],[120,72,8],[146,77,-8],[84,92,14],[114,88,-6],[142,91,12],[104,101,-10],[130,101,6]];
+        const isQianGuo = /炝锅鳕鱼/.test(name);
+        foodSvg = `
+          ${isQianGuo ? `<ellipse cx="120" cy="91" rx="58" ry="27" fill="url(#chiliBroth_${uid})"/>` : ''}
+          ${fillets.map(([x,y,rot]) => `
+            <g transform="translate(${x},${y}) rotate(${rot})">
+              <path d="M-16 0 C-12 -9, 12 -9, 16 0 C12 9, -12 9, -16 0 Z" fill="#fffdf7" stroke="#fde68a" stroke-width="1.1"/>
+              <path d="M-8 -2 Q0 2 8 -2" stroke="#fca5a5" stroke-width="1" fill="none" opacity="0.55"/>
+            </g>
+          `).join('')}
+          ${isQianGuo
+            ? `<path d="M88 82 L148 88 M94 92 L146 78 M100 76 L138 96 M92 88 L150 84" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round"/><path d="M96 80 L142 90 M102 94 L140 80" stroke="#dc2626" stroke-width="2" stroke-linecap="round"/>`
+            : `${chiliRings([[98,80],[126,78],[140,88],[106,95],[132,96]])}${scallionRings([[114,83],[128,87],[102,87]])}`
+          }
+          ${sesame([[118,78,10],[124,84,-20],[110,90,35],[135,83,15]])}
+        `;
+      } else if (/河虾/.test(name)) {
+        const shrimps = [[90,75,20],[118,70,-15],[145,76,35],[82,91,-25],[110,87,15],[138,89,-20],[156,93,30],[100,101,-10],[128,100,18]];
+        foodSvg = `
+          <ellipse cx="120" cy="91" rx="56" ry="26" fill="#fed7aa" opacity="0.4"/>
+          ${shrimps.map(([x,y,rot]) => `
+            <g transform="translate(${x},${y}) rotate(${rot})">
+              <path d="M-11 3 C-9 -9, 8 -9, 12 2" stroke="#dc2626" stroke-width="6.5" stroke-linecap="round" fill="none"/>
+              <path d="M-10 3 C-8 -8, 7 -8, 11 2" stroke="#fb923c" stroke-width="3" stroke-linecap="round" fill="none"/>
+              <path d="M11 2 L16 6 M11 2 L16 -1" stroke="#ef4444" stroke-width="1.6" stroke-linecap="round"/>
+              <path d="M-11 3 L-18 -2" stroke="#f97316" stroke-width="0.9" opacity="0.75"/>
+            </g>
+          `).join('')}
+          <path d="M84 84 L106 78 M126 95 L150 86 M102 96 L124 82" stroke="#16a34a" stroke-width="2.6" stroke-linecap="round"/>
+          ${sesame([[116,82,12],[130,86,-22],[106,90,35]])}
+        `;
+      } else if (/鱿鱼/.test(name)) {
+        const rings = [[92,76],[120,72],[146,78],[86,92],[114,89],[142,92],[106,101],[130,101]];
+        foodSvg = `
+          ${/薯条/.test(name) ? `
+            <g stroke="#facc15" stroke-width="5.5" stroke-linecap="round">
+              <line x1="74" y1="84" x2="108" y2="70"/><line x1="126" y1="72" x2="164" y2="86"/>
+              <line x1="80" y1="98" x2="118" y2="82"/><line x1="122" y1="99" x2="162" y2="82"/>
+              <line x1="94" y1="104" x2="138" y2="94"/>
+            </g>
+          ` : `
+            <g stroke="#15803d" stroke-width="3.2" stroke-linecap="round">
+              <line x1="74" y1="82" x2="112" y2="92"/><line x1="124" y1="76" x2="164" y2="88"/>
+              <line x1="84" y1="98" x2="132" y2="84"/><line x1="112" y1="102" x2="156" y2="94"/>
+            </g>
+          `}
+          ${rings.map(([x,y], i) => `
+            <ellipse cx="${x}" cy="${y}" rx="11" ry="7.5" fill="none" stroke="#9f1239" stroke-width="4.2"/>
+            <ellipse cx="${x}" cy="${y}" rx="11" ry="7.5" fill="none" stroke="${i%2?'#fff1f2':'#fed7aa'}" stroke-width="2.4"/>
+          `).join('')}
+          ${chiliRings([[106,82],[132,86],[118,95]])}
+          ${sesame([[114,78,20],[126,90,-15],[100,90,30]])}
+        `;
+      } else if (/蚕蛹/.test(name)) {
+        const pupae = [[92,75,18],[120,71,-12],[146,76,25],[82,90,-22],[110,87,10],[138,88,-16],[158,92,24],[98,101,-8],[126,100,15]];
+        foodSvg = `
+          <ellipse cx="120" cy="91" rx="54" ry="24" fill="#78350f" opacity="0.28"/>
+          ${pupae.map(([x,y,rot]) => `
+            <g transform="translate(${x},${y}) rotate(${rot})">
+              <ellipse cx="0" cy="0" rx="13" ry="7.8" fill="url(#pupa_${uid})" stroke="#451a03" stroke-width="1.1"/>
+              <path d="M-5 -7.2 Q-3 0 -5 7.2 M1 -7.6 Q3 0 1 7.6 M6 -6.5 Q8 0 6 6.5" stroke="#451a03" stroke-width="1" fill="none" opacity="0.65"/>
+              <ellipse cx="-3" cy="-2.8" rx="5" ry="1.8" fill="#fef3c7" opacity="0.45"/>
+            </g>
+          `).join('')}
+          <path d="M84 82 L104 77 M128 95 L150 86" stroke="#16a34a" stroke-width="3" stroke-linecap="round"/>
+          ${chiliRings([[108,81],[132,83],[116,95]])}
+        `;
+      } else if (/皮蛋豆腐/.test(name)) {
+        foodSvg = `
+          <ellipse cx="120" cy="96" rx="56" ry="24" fill="#3b1506" opacity="0.72"/>
+          <!-- Silken lactone tofu block with fine ribs -->
+          <rect x="74" y="66" width="92" height="40" rx="8" fill="#fffdf9" stroke="#e7e5e4" stroke-width="1.2"/>
+          <path d="M88 66 V106 M104 66 V106 M120 66 V106 M136 66 V106 M152 66 V106" stroke="#f1f5f9" stroke-width="1.5"/>
+          <!-- Translucent century-egg wedges -->
+          ${[[96,68,-15],[120,65,5],[144,68,18],[108,76,10],[132,76,-12]].map(([x,y,r]) => `
+            <g transform="translate(${x},${y}) rotate(${r})">
+              <path d="M-11 4 Q0 -9 11 4 Z" fill="#292524" opacity="0.9"/>
+              <ellipse cx="0" cy="1" rx="5" ry="2.8" fill="#3f6212"/>
+            </g>
+          `).join('')}
+          ${chiliRings([[104,72],[126,71],[138,75],[114,78]])}
+          ${scallionRings([[110,70],[120,74],[132,70],[98,76]])}
+        `;
+      } else if (/豆腐/.test(name) && !/干豆腐/.test(name)) {
+        const isMapo = /麻辣|石板/.test(name);
+        const isRound = /日本豆腐/.test(name);
+        const cubes = [[90,75,-8],[116,71,6],[142,75,-10],[82,90,10],[108,86,-5],[134,87,8],[156,90,-12],[98,100,6],[124,99,-7],[144,100,9]];
+        foodSvg = `
+          <ellipse cx="120" cy="92" rx="58" ry="27" fill="${isMapo ? `url(#chiliBroth_${uid})` : '#b45309'}" opacity="0.85"/>
+          ${cubes.map(([x,y,rot]) => isRound ? `
+            <g transform="translate(${x},${y})">
+              <ellipse cx="0" cy="0" rx="12" ry="8.5" fill="#fde047" stroke="#ca8a04" stroke-width="1.3"/>
+              <ellipse cx="0" cy="0" rx="7" ry="4.5" fill="#d97706" opacity="0.65"/>
+            </g>
+          ` : `
+            <g transform="translate(${x},${y}) rotate(${rot})">
+              <rect x="-11" y="-8" width="22" height="15" rx="3.5" fill="#fffbeb" stroke="#fde68a" stroke-width="1"/>
+              <rect x="-8" y="-5.5" width="10" height="3" rx="1.5" fill="#ffffff" opacity="0.8"/>
+            </g>
+          `).join('')}
+          ${/肉帽|当家|老家/.test(name) ? `<ellipse cx="120" cy="84" rx="28" ry="12" fill="#7c2d12" opacity="0.82"/>` : ''}
+          ${scallionRings([[108,82],[122,85],[134,81],[116,92]])}
+          ${isMapo ? chiliRings([[98,85],[128,92]]) : ''}
+        `;
+      } else if (/地三鲜|茄/.test(name)) {
+        const isGarlicStrip = /蒜香茄|酱茄子/.test(name);
+        if (isGarlicStrip) {
+          foodSvg = `
+            <ellipse cx="120" cy="93" rx="58" ry="26" fill="#78350f" opacity="0.45"/>
+            ${[-34,-17,0,17,34].map((dx, i) => `
+              <path d="M${114+dx} 63 Q${120+dx} 88 ${116+dx} 112" stroke="${i%2?'#4c1d95':'#581c87'}" stroke-width="14" stroke-linecap="round" fill="none"/>
+              <path d="M${114+dx} 65 Q${120+dx} 88 ${116+dx} 110" stroke="#fde68a" stroke-width="5" stroke-linecap="round" fill="none" opacity="0.55"/>
+            `).join('')}
+            <!-- Generous golden minced garlic blanket -->
+            <ellipse cx="120" cy="87" rx="44" ry="12" fill="#fef08a" opacity="0.88"/>
+            <ellipse cx="120" cy="87" rx="36" ry="8" fill="#facc15" opacity="0.65"/>
+            ${chiliRings([[100,86],[116,84],[130,88],[144,86]])}
+            ${scallionRings([[108,88],[124,86],[138,85],[94,89]])}
+          `;
+        } else {
+          foodSvg = `
+            <ellipse cx="120" cy="93" rx="56" ry="25" fill="#92400e" opacity="0.42"/>
+            <!-- Hobnail eggplant, golden potato, jade bell pepper -->
+            <polygon points="76,84 98,68 106,90 84,96" fill="#581c87" stroke="#3b0764" stroke-width="1"/>
+            <polygon points="84,84 98,73 103,88" fill="#fde68a"/>
+            <polygon points="124,66 150,74 142,93 118,86" fill="#d97706" stroke="#92400e" stroke-width="1"/>
+            <polygon points="100,92 126,82 132,106 104,108" fill="#581c87"/>
+            <polygon points="106,94 124,86 128,103" fill="#fef08a"/>
+            <polygon points="134,88 164,82 158,105 136,104" fill="#eab308" stroke="#ca8a04" stroke-width="1"/>
+            <polygon points="98,76 122,72 116,90 96,86" fill="#16a34a"/>
+            <polygon points="126,78 148,74 142,90" fill="#22c55e"/>
+            <polygon points="74,94 96,88 92,106" fill="#15803d"/>
+            <path d="M96 80 Q114 76 128 84" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.5"/>
+          `;
+        }
+      } else if (/土豆丝|干豆腐丝|家常凉菜|粉条|炒粉|粉丝/.test(name)) {
+        const isVermicelli = /粉条|炒粉|粉丝/.test(name);
+        const c1 = isVermicelli ? '#78350f' : (/干豆腐/.test(name) ? '#fde68a' : '#facc15');
+        const c2 = isVermicelli ? '#b45309' : (/干豆腐/.test(name) ? '#fcd34d' : '#fef08a');
+        const strands = Array.from({length: 34}, (_, i) => {
+          const x1 = 70 + ((i * 19) % 62);
+          const y1 = 65 + ((i * 11) % 40);
+          const x2 = x1 + 28 + (i % 16);
+          const y2 = y1 + ((i % 2 === 0 ? 1 : -1) * (8 + (i % 12)));
+          return `<path d="M${x1} ${y1} Q${(x1+x2)/2} ${y1 - 6 + (i%11)} ${x2} ${y2}" stroke="${i%2?c1:c2}" stroke-width="${isVermicelli?3.2:2.8}" stroke-linecap="round" fill="none"/>`;
+        }).join('');
+        foodSvg = `
+          <ellipse cx="120" cy="92" rx="54" ry="24" fill="${c1}" opacity="0.32"/>
+          ${strands}
+          <!-- Chili & scallion julienne accents -->
+          <path d="M92 78 L116 86 M128 92 L152 80 M104 96 L130 84" stroke="#dc2626" stroke-width="2.6" stroke-linecap="round"/>
+          <path d="M98 88 L122 76 M120 98 L146 90" stroke="#16a34a" stroke-width="2.6" stroke-linecap="round"/>
+          ${/肉沫|砂锅/.test(name) ? scallionRings([[114,82],[126,88],[120,76]]) : ''}
+          ${/小米/.test(name) ? sesame([[104,80,0],[118,84,0],[132,82,0],[112,92,0],[126,93,0],[120,76,0]]) : ''}
+        `;
+      } else if (/鸡蛋|木须肉|实蛋/.test(name)) {
+        const isShiDan = /实蛋/.test(name);
+        if (isShiDan) {
+          const discs = [[92,76],[120,72],[146,77],[86,92],[114,89],[142,91],[106,101],[132,101]];
+          foodSvg = `
+            ${discs.map(([x,y]) => `
+              <ellipse cx="${x}" cy="${y}" rx="14" ry="9.5" fill="#a3a656" stroke="#b45309" stroke-width="2"/>
+              <ellipse cx="${x}" cy="${y}" rx="9" ry="5.5" fill="#bef264" opacity="0.45"/>
+            `).join('')}
+            ${chiliRings([[108,82],[130,86]])}
+            ${sesame([[96,76,15],[122,74,-20],[140,89,30],[112,92,10],[128,99,-10]])}
+          `;
+        } else {
+          const curds = [[92,76],[118,71],[144,76],[84,90],[110,86],[136,88],[154,91],[100,100],[126,99]];
+          let partner = '';
+          if (/香肠/.test(name)) {
+            partner = [[104,79],[132,81],[96,94],[122,93],[146,85]].map(([x,y]) =>
+              `<ellipse cx="${x}" cy="${y}" rx="11" ry="7.5" fill="#be123c" stroke="#881337" stroke-width="1"/><circle cx="${x-3}" cy="${y-1}" r="1.6" fill="#fecdd3"/><circle cx="${x+3}" cy="${y+2}" r="1.4" fill="#fecdd3"/>`
+            ).join('');
+          } else if (/韭菜|毛葱/.test(name)) {
+            partner = `<g stroke="#15803d" stroke-width="4.2" stroke-linecap="round"><path d="M78 82 L112 92"/><path d="M108 72 L144 86"/><path d="M90 98 L132 82"/><path d="M122 100 L158 88"/><path d="M96 76 L126 94"/></g>`;
+          } else if (/木须肉/.test(name)) {
+            partner = `
+              <ellipse cx="104" cy="80" rx="10" ry="7" fill="#1c1917"/><ellipse cx="134" cy="84" rx="10" ry="7" fill="#292524"/><ellipse cx="116" cy="95" rx="10" ry="6.5" fill="#1c1917"/>
+              <polygon points="90,86 106,78 104,92" fill="#16a34a"/><polygon points="122,74 138,70 134,84" fill="#22c55e"/><polygon points="136,92 152,86 148,100" fill="#16a34a"/>
+            `;
+          } else if (/干豆腐/.test(name)) {
+            partner = [[102,80,18],[132,82,-15],[114,94,12],[142,94,-20]].map(([x,y,r]) =>
+              `<rect x="${x-12}" y="${y-6}" width="24" height="12" rx="2" transform="rotate(${r} ${x} ${y})" fill="#f59e0b" stroke="#b45309" stroke-width="1"/>`
+            ).join('');
+          } else if (/剁椒|酱/.test(name)) {
+            partner = chiliRings([[102,79],[124,78],[138,86],[110,92],[128,95]]) + scallionRings([[116,84],[130,81]]);
+          }
+          foodSvg = curds.map(([x,y]) => `
+            <ellipse cx="${x}" cy="${y}" rx="15" ry="10.5" fill="#eab308"/>
+            <ellipse cx="${x-2}" cy="${y-2}" rx="10" ry="6.5" fill="#fef08a"/>
+          `).join('') + partner;
+        }
+      } else if (/肥肠|肠子/.test(name)) {
+        const rings = [[92,76,-12],[118,72,10],[144,77,-15],[84,91,14],[110,87,-8],[136,88,12],[156,92,-10],[100,100,8],[128,100,-12]];
+        foodSvg = `
+          <ellipse cx="120" cy="92" rx="56" ry="25" fill="#7c2d12" opacity="0.48"/>
+          ${rings.map(([x,y,r]) => `
+            <g transform="translate(${x},${y}) rotate(${r})">
+              <ellipse cx="0" cy="0" rx="13" ry="9" fill="#b45309" stroke="#7c2d12" stroke-width="1.3"/>
+              <ellipse cx="0" cy="0" rx="5" ry="3.2" fill="#fed7aa" opacity="0.88"/>
+              <path d="M-7 -4 Q0 -7 7 -4" stroke="#ffedd5" stroke-width="1.3" fill="none" opacity="0.6"/>
+            </g>
+          `).join('')}
+          <polygon points="98,82 114,76 110,90" fill="#16a34a"/><polygon points="128,80 144,76 138,90" fill="#22c55e"/>
+          <polygon points="112,92 128,88 122,102" fill="#dc2626"/><polygon points="84,82 98,78 94,90" fill="#dc2626"/>
+        `;
+      } else if (/排骨|脊骨/.test(name)) {
+        const ribs = [[94,77,-22],[124,73,16],[148,82,-14],[88,94,20],[118,90,-8],[142,97,18]];
+        foodSvg = `
+          <ellipse cx="120" cy="93" rx="56" ry="25" fill="#451a03" opacity="0.48"/>
+          ${ribs.map(([x,y,rot]) => `
+            <g transform="translate(${x},${y}) rotate(${rot})">
+              <!-- Exposed ivory bone ends -->
+              <rect x="-22" y="-3.5" width="44" height="7" rx="3.5" fill="#fef3c7" stroke="#d6d3d1" stroke-width="0.8"/>
+              <!-- Roasted glazed rib meat -->
+              <ellipse cx="0" cy="0" rx="16" ry="11" fill="url(#braiseMeat_${uid})" stroke="#451a03" stroke-width="1.2"/>
+              <path d="M-8 -4 Q0 -8 8 -4" stroke="#fed7aa" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.65"/>
+            </g>
+          `).join('')}
+          ${sesame([[110,80,15],[124,86,-20],[136,82,30],[102,92,10],[120,95,-15]])}
+          ${scallionRings([[115,84],[130,90]])}
+        `;
+      } else if (/杀猪烩菜|大白菜|煎酸菜|狮子头|鹿茸菇/.test(name)) {
+        foodSvg = `
+          <!-- Simmering golden pickled-cabbage ribbons -->
+          <g stroke="#fde047" stroke-width="5" stroke-linecap="round" fill="none" opacity="0.85">
+            <path d="M72 82 Q104 68 136 84"/><path d="M84 96 Q120 80 162 94"/><path d="M92 72 Q126 88 158 76"/>
+          </g>
+          <!-- Honeycomb frozen tofu cubes -->
+          <g transform="translate(92,82) rotate(-10)"><rect x="-12" y="-9" width="24" height="18" rx="3" fill="#fef08a" stroke="#ca8a04" stroke-width="1"/><circle cx="-5" cy="-3" r="1.3" fill="#ca8a04"/><circle cx="4" cy="2" r="1.3" fill="#ca8a04"/><circle cx="2" cy="-4" r="1.1" fill="#ca8a04"/></g>
+          <g transform="translate(146,90) rotate(12)"><rect x="-12" y="-9" width="24" height="18" rx="3" fill="#fef08a" stroke="#ca8a04" stroke-width="1"/><circle cx="-4" cy="-2" r="1.3" fill="#ca8a04"/><circle cx="5" cy="3" r="1.3" fill="#ca8a04"/></g>
+          <!-- Streaky pork belly / meatballs / blood sausage -->
+          <ellipse cx="120" cy="78" rx="16" ry="10" fill="#9a3412" stroke="#fed7aa" stroke-width="1"/>
+          <ellipse cx="116" cy="96" rx="15" ry="9.5" fill="${/杀猪/.test(name) ? '#4c0519' : '#7c2d12'}"/>
+          ${scallionRings([[112,85],[128,84],[122,90]])}
+          ${chiliRings([[104,90],[136,78]])}
+        `;
+      } else if (/腰|肚片|鸡胗|护心|三样/.test(name)) {
+        const pieces = [[92,76,16],[118,72,-18],[144,77,22],[84,91,-14],[112,87,8],[138,89,-20],[156,92,15],[102,100,14],[128,100,-12]];
+        foodSvg = `
+          <ellipse cx="120" cy="92" rx="56" ry="25" fill="#7c2d12" opacity="0.38"/>
+          ${pieces.map(([x,y,rot]) => `
+            <g transform="translate(${x},${y}) rotate(${rot})">
+              <rect x="-13" y="-8" width="26" height="16" rx="6" fill="#881337" stroke="#4c0519" stroke-width="1"/>
+              <path d="M-8 -6 L-4 6 M0 -7 L4 6 M7 -6 L10 5 M-9 0 H9" stroke="#fda4af" stroke-width="1" opacity="0.55"/>
+            </g>
+          `).join('')}
+          <polygon points="98,82 114,76 110,90" fill="#16a34a"/><polygon points="130,82 146,77 140,92" fill="#22c55e"/>
+          <polygon points="112,94 128,89 122,103" fill="#dc2626"/>
+        `;
+      } else if (/肉丝|肉片/.test(name)) {
+        const isBoiled = /水煮/.test(name);
+        const strips = Array.from({length: 22}, (_, i) => {
+          const x = 80 + ((i * 17) % 76);
+          const y = 69 + ((i * 9) % 36);
+          const rot = (i * 41) % 160 - 80;
+          return `<rect x="${x-12}" y="${y-3.5}" width="24" height="7" rx="3.5" transform="rotate(${rot} ${x} ${y})" fill="${isBoiled?'#991b1b':'#9a3412'}" stroke="#fed7aa" stroke-width="0.6"/>`;
+        }).join('');
+        foodSvg = `
+          ${!isBoiled ? `<ellipse cx="120" cy="92" rx="56" ry="25" fill="#c2410c" opacity="0.35"/>` : ''}
+          ${strips}
+          <path d="M88 82 L114 90 M126 78 L150 88" stroke="#16a34a" stroke-width="3" stroke-linecap="round"/>
+          <path d="M96 94 L122 82 M118 98 L144 90" stroke="#ef4444" stroke-width="2.6" stroke-linecap="round"/>
+          ${sesame([[114,82,15],[128,88,-20],[120,94,30]])}
+        `;
+      } else if (/豆角|包菜|大头菜|豆芽|尖椒干豆腐|土豆片|养生小炒/.test(name)) {
+        const isTofuSheet = /尖椒干豆腐/.test(name);
+        const isPotatoSlice = /土豆片/.test(name);
+        if (isTofuSheet || isPotatoSlice) {
+          const tiles = [[92,76,-15],[118,72,12],[144,77,-10],[84,90,18],[112,87,-8],[138,88,14],[102,100,-12],[128,99,10]];
+          foodSvg = tiles.map(([x,y,r]) => `
+            <polygon points="-14,-7 4,-10 14,7 -4,10" transform="translate(${x},${y}) rotate(${r})" fill="${isPotatoSlice?'#eab308':'#fde68a'}" stroke="#ca8a04" stroke-width="1"/>
+          `).join('') + `
+            <polygon points="100,82 118,76 112,92" fill="#16a34a"/><polygon points="128,84 146,78 140,94" fill="#22c55e"/>
+            <polygon points="86,86 102,80 96,96" fill="#15803d"/>
+            ${isPotatoSlice ? `<ellipse cx="114" cy="84" rx="9" ry="6" fill="#78350f"/><ellipse cx="132" cy="94" rx="9" ry="6" fill="#78350f"/>` : ''}
+          `;
+        } else {
+          foodSvg = `
+            <ellipse cx="120" cy="91" rx="55" ry="25" fill="#bbf7d0" opacity="0.5"/>
+            <g stroke="#15803d" stroke-width="7" stroke-linecap="round" fill="none">
+              <path d="M76 82 Q104 66 134 84"/><path d="M84 96 Q118 78 158 94"/><path d="M94 72 Q128 88 160 78"/><path d="M90 103 Q124 90 148 102"/>
+            </g>
+            <g stroke="#4ade80" stroke-width="3.2" stroke-linecap="round" fill="none">
+              <path d="M78 82 Q104 68 132 84"/><path d="M86 96 Q118 80 156 94"/>
+            </g>
+            ${chiliRings([[104,80],[132,86],[116,95]])}
+          `;
+        }
+      } else if (/汤|粥/.test(name)) {
+        const isSeaweed = /紫菜/.test(name);
+        foodSvg = isSeaweed ? `
+          <ellipse cx="100" cy="82" rx="20" ry="11" fill="#14532d" opacity="0.82"/>
+          <ellipse cx="140" cy="90" rx="22" ry="12" fill="#14532d" opacity="0.82"/>
+          <ellipse cx="116" cy="98" rx="18" ry="9" fill="#052e16" opacity="0.75"/>
+          <path d="M82 88 Q112 70 152 82 M92 98 Q126 82 156 96" stroke="#fef08a" stroke-width="4.5" stroke-linecap="round" fill="none" opacity="0.9"/>
+          ${scallionRings([[116,84],[128,89],[108,92]])}
+        ` : `
+          ${[[92,78],[118,74],[142,80],[88,92],[114,89],[138,94],[106,100],[126,100]].map(([x,y]) =>
+            `<circle cx="${x}" cy="${y}" r="6.5" fill="#fffbeb" stroke="#fde68a" stroke-width="1"/>`
+          ).join('')}
+          <ellipse cx="104" cy="83" rx="9" ry="5.5" fill="#dc2626"/><ellipse cx="132" cy="86" rx="9" ry="5.5" fill="#dc2626"/>
+          <path d="M88 86 Q120 74 150 90" stroke="#fde047" stroke-width="3.2" stroke-linecap="round" fill="none"/>
+          ${scallionRings([[116,82],[124,92],[98,94]])}
+        `;
+      } else {
+        // Crispy Golden Nuggets / Spicy Chicken / Stir-Fried Signature Chunks
+        const isGolden = /肉段|香酥鸡|辣子鸡|宫保鸡丁|滋味肉/.test(name);
+        const isSpicyChicken = /辣子鸡|宫保鸡丁/.test(name);
+        const nuggets = [[92,75,-14],[118,70,10],[144,76,-12],[82,90,15],[109,86,-8],[135,87,14],[156,91,-16],[98,100,8],[126,99,-10],[144,101,12]];
+        foodSvg = `
+          <ellipse cx="120" cy="93" rx="56" ry="25" fill="${isGolden ? '#d97706' : '#7c2d12'}" opacity="0.35"/>
+          ${nuggets.map(([x,y,rot], idx) => `
+            <g transform="translate(${(x + rand(idx)*4 - 2).toFixed(1)},${y}) rotate(${rot})">
+              <path d="M-13 -4 Q-8 -11 2 -9 Q13 -8 14 1 Q12 10 0 9 Q-12 9 -13 -4 Z" fill="${isGolden ? `url(#crispyGold_${uid})` : `url(#braiseMeat_${uid})`}" stroke="${isGolden ? '#b45309' : '#451a03'}" stroke-width="1"/>
+              <path d="M-6 -4 Q1 -7 7 -3" stroke="#fffbeb" stroke-width="1.8" stroke-linecap="round" fill="none" opacity="0.65"/>
+            </g>
+          `).join('')}
+          ${isSpicyChicken
+            ? `<g stroke="#b91c1c" stroke-width="4.5" stroke-linecap="round"><line x1="86" y1="82" x2="102" y2="76"/><line x1="126" y1="78" x2="142" y2="84"/><line x1="104" y1="94" x2="120" y2="88"/><line x1="134" y1="96" x2="148" y2="90"/></g>`
+            : `<polygon points="98,82 114,76 110,90" fill="#16a34a"/><polygon points="128,82 144,77 138,91" fill="#22c55e"/>`
+          }
+          ${sesame([[114,79,15],[126,86,-20],[108,92,30],[136,88,10]])}
+        `;
+      }
+
+      const steamSvg = (vessel === 'pot' || vessel === 'sizzle' || vessel === 'bowl' || vessel === 'steamer' || vessel === 'tray') ? `
+        <g stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" fill="none" opacity="0.52">
+          <path d="M92 38 C86 28, 98 20, 92 10"/>
+          <path d="M120 34 C114 24, 126 16, 120 6"/>
+          <path d="M148 38 C142 28, 154 20, 148 10"/>
+        </g>
+      ` : '';
+
+      return `
+        <svg viewBox="0 0 240 168" class="w-full h-full block select-none" aria-hidden="true">
+          <defs>
+            <linearGradient id="bg_${uid}" x1="0" y1="0" x2="0.8" y2="1">
+              <stop offset="0%" stop-color="${bgTop}"/>
+              <stop offset="100%" stop-color="${bgBot}"/>
+            </linearGradient>
+            <linearGradient id="plateRim_${uid}" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#ffffff"/>
+              <stop offset="100%" stop-color="#f1efe9"/>
+            </linearGradient>
+            <radialGradient id="plateWell_${uid}" cx="50%" cy="45%" r="55%">
+              <stop offset="0%" stop-color="#ffffff"/>
+              <stop offset="80%" stop-color="#f8f6f1"/>
+              <stop offset="100%" stop-color="#ebe7de"/>
+            </radialGradient>
+            <linearGradient id="wood_${uid}" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#b87339"/>
+              <stop offset="50%" stop-color="#9c5a25"/>
+              <stop offset="100%" stop-color="#7c4419"/>
+            </linearGradient>
+            <linearGradient id="steel_${uid}" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#f1f5f9"/>
+              <stop offset="50%" stop-color="#cbd5e1"/>
+              <stop offset="100%" stop-color="#94a3b8"/>
+            </linearGradient>
+            <radialGradient id="chiliBroth_${uid}" cx="50%" cy="48%" r="55%">
+              <stop offset="0%" stop-color="#ef4444"/>
+              <stop offset="65%" stop-color="#b91c1c"/>
+              <stop offset="100%" stop-color="#7f1d1d"/>
+            </radialGradient>
+            <radialGradient id="goldBroth_${uid}" cx="50%" cy="48%" r="55%">
+              <stop offset="0%" stop-color="#fde047"/>
+              <stop offset="70%" stop-color="#eab308"/>
+              <stop offset="100%" stop-color="#a16207"/>
+            </radialGradient>
+            <radialGradient id="eggBroth_${uid}" cx="50%" cy="48%" r="55%">
+              <stop offset="0%" stop-color="#fef9c3"/>
+              <stop offset="100%" stop-color="#fde047"/>
+            </radialGradient>
+            <radialGradient id="braiseMeat_${uid}" cx="42%" cy="35%" r="60%">
+              <stop offset="0%" stop-color="#ea580c"/>
+              <stop offset="55%" stop-color="#9a3412"/>
+              <stop offset="100%" stop-color="#5c1909"/>
+            </radialGradient>
+            <radialGradient id="braiseGlaze_${uid}" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#9a3412" stop-opacity="0.9"/>
+              <stop offset="75%" stop-color="#5c1909" stop-opacity="0.75"/>
+              <stop offset="100%" stop-color="#451a03" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="crispyGold_${uid}" cx="40%" cy="35%" r="62%">
+              <stop offset="0%" stop-color="#fde047"/>
+              <stop offset="55%" stop-color="#f59e0b"/>
+              <stop offset="100%" stop-color="#b45309"/>
+            </radialGradient>
+            <radialGradient id="yolk_${uid}" cx="40%" cy="38%" r="58%">
+              <stop offset="0%" stop-color="#fde047"/>
+              <stop offset="65%" stop-color="#f59e0b"/>
+              <stop offset="100%" stop-color="#d97706"/>
+            </radialGradient>
+            <radialGradient id="meringue_${uid}" cx="40%" cy="35%" r="60%">
+              <stop offset="0%" stop-color="#ffffff"/>
+              <stop offset="75%" stop-color="#fffbeb"/>
+              <stop offset="100%" stop-color="#fde68a"/>
+            </radialGradient>
+            <radialGradient id="pupa_${uid}" cx="40%" cy="35%" r="60%">
+              <stop offset="0%" stop-color="#d97706"/>
+              <stop offset="65%" stop-color="#92400e"/>
+              <stop offset="100%" stop-color="#5c2408"/>
+            </radialGradient>
+          </defs>
+          <rect width="240" height="168" fill="url(#bg_${uid})"/>
+          ${tableDecor}
+          ${vesselSvg}
+          ${foodSvg}
+          ${steamSvg}
+        </svg>
+      `;
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function getAllDishes() {
+      return [...state.customDishes, ...INITIAL_DISHES];
+    }
+
+    function getDishPrice(dish) {
+      if (Object.prototype.hasOwnProperty.call(state.priceOverrides, dish.id)) {
+        return state.priceOverrides[dish.id];
+      }
+      return dish.price;
+    }
+
+    let toastTimer = null;
+    function showToast(msg) {
+      const box = document.getElementById('toastBox');
+      const txt = document.getElementById('toastText');
+      txt.textContent = msg;
+      box.classList.remove('hidden');
+      box.classList.add('flex', 'toast-enter');
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        box.classList.add('hidden');
+        box.classList.remove('flex', 'toast-enter');
+      }, 2200);
+    }
+
+    function updateQty(dishId, delta) {
+      const cur = state.cart[dishId] ? state.cart[dishId].qty : 0;
+      const next = Math.max(0, cur + delta);
+      if (next === 0) {
+        delete state.cart[dishId];
+      } else {
+        state.cart[dishId] = {
+          qty: next,
+          note: state.cart[dishId] ? state.cart[dishId].note : ''
+        };
+      }
+      state.clearConfirmPending = false;
+      saveState();
+      renderAll();
+      if (state.detailDishId === dishId) {
+        renderDetailModalContent();
+      }
+    }
+
+    function quickAddByName(name) {
+      const all = getAllDishes();
+      let found = all.find(d => d.name === name);
+      if (!found) {
+        found = {
+          id: 'custom_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+          name: name,
+          price: null,
+          cat: 'cold_staple',
+          zone: '自选加点',
+          pos: '手动添加',
+          py: ''
+        };
+        state.customDishes.unshift(found);
+      }
+      updateQty(found.id, 1);
+      showToast('已加入：' + name);
+    }
+
+    function getCartStats() {
+      const all = getAllDishes();
+      const dishMap = new Map(all.map(d => [d.id, d]));
+      let dishCount = 0;
+      let totalPortions = 0;
+      let knownSum = 0;
+      let unpricedCount = 0;
+      const orderedItems = [];
+      const structure = { meat: 0, seafood: 0, veg: 0, cold_staple: 0 };
+
+      for (const [id, entry] of Object.entries(state.cart)) {
+        if (!entry || entry.qty <= 0) continue;
+        const dish = dishMap.get(id);
+        if (!dish) continue;
+        dishCount += 1;
+        totalPortions += entry.qty;
+        const p = getDishPrice(dish);
+        if (typeof p === 'number' && !isNaN(p)) {
+          knownSum += p * entry.qty;
+        } else {
+          unpricedCount += 1;
+        }
+        if (dish.cat === 'seafood') structure.seafood += entry.qty;
+        else if (dish.cat === 'veg' || dish.cat === 'homestyle') structure.veg += entry.qty;
+        else if (dish.cat === 'cold_staple') structure.cold_staple += entry.qty;
+        else structure.meat += entry.qty;
+
+        orderedItems.push({ dish, qty: entry.qty, note: entry.note || '', effectivePrice: p });
+      }
+      return { dishCount, totalPortions, knownSum, unpricedCount, orderedItems, structure };
+    }
+
+    function formatStructureSummary(structure, dishCount) {
+      if (dishCount === 0) return '';
+      const segs = [];
+      if (structure.meat > 0) segs.push(`${structure.meat} 荤/硬菜`);
+      if (structure.seafood > 0) segs.push(`${structure.seafood} 水产`);
+      if (structure.veg > 0) segs.push(`${structure.veg} 家常素蔬`);
+      if (structure.cold_staple > 0) segs.push(`${structure.cold_staple} 凉菜/汤主食`);
+      return '荤素搭配：' + segs.join(' · ');
+    }
+
+    function buildCopyText() {
+      const { orderedItems } = getCartStats();
+      if (orderedItems.length === 0) return '';
+
+      const parts = orderedItems.map((item, idx) => {
+        let piece = item.dish.name;
+        if (state.copyIncludeQty && item.qty > 1) {
+          piece += ' ×' + item.qty;
+        }
+        if (state.copyIncludeNotes && item.note.trim()) {
+          piece += '（' + item.note.trim() + '）';
+        }
+        if (state.copyFormat === 'numbered') {
+          return (idx + 1) + '. ' + piece;
+        }
+        return piece;
+      });
+
+      let body = state.copyFormat === 'inline' ? parts.join('、') : parts.join('\n');
+      if (state.copyIncludeNotes && state.overallNote.trim()) {
+        body += (state.copyFormat === 'inline' ? '（备注：' + state.overallNote.trim() + '）' : '\n备注：' + state.overallNote.trim());
+      }
+      return body;
+    }
+
+    async function copyDishNames() {
+      const text = buildCopyText();
+      if (!text) {
+        showToast('请先选择至少一道菜品');
+        return;
+      }
+      let copied = false;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        try {
+          await navigator.clipboard.writeText(text);
+          copied = true;
+        } catch (err) {
+          copied = false;
+        }
+      }
+      if (!copied) {
+        try {
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          ta.style.position = 'fixed';
+          ta.style.left = '-9999px';
+          ta.style.top = '0';
+          document.body.appendChild(ta);
+          ta.focus();
+          ta.select();
+          copied = document.execCommand('copy');
+          document.body.removeChild(ta);
+        } catch (err) {
+          copied = false;
+        }
+      }
+      const { dishCount } = getCartStats();
+      if (copied) {
+        showToast('已复制 ' + dishCount + ' 道纯菜名（不含价格）');
+      } else {
+        openDrawer();
+        const area = document.getElementById('copyPreviewArea');
+        area.focus();
+        area.select();
+        showToast('已选中菜名文本，请按 Ctrl+C 或长按复制');
+      }
+    }
+
+    function renderCategoryTabs() {
+      const container = document.getElementById('categoryTabs');
+      const all = getAllDishes();
+      const catSelected = {};
+      for (const d of all) {
+        const q = state.cart[d.id] ? state.cart[d.id].qty : 0;
+        if (q > 0) {
+          catSelected[d.cat] = (catSelected[d.cat] || 0) + q;
+          catSelected.all = (catSelected.all || 0) + q;
+        }
+      }
+
+      container.innerHTML = CATEGORIES.map(cat => {
+        const active = state.activeCategory === cat.id;
+        const badgeCount = catSelected[cat.id] || 0;
+        return `
+          <button
+            type="button"
+            data-cat-id="${cat.id}"
+            class="px-3.5 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition flex items-center gap-1.5 border ${
+              active
+                ? 'bg-stone-900 text-amber-50 border-stone-900 shadow-sm'
+                : 'bg-white text-stone-600 border-stone-200/80 hover:bg-stone-100 hover:text-stone-900'
+            }"
+          >
+            <span>${escapeHtml(cat.label)}</span>
+            ${badgeCount > 0 ? `<span class="px-1.5 py-0.2 rounded-full text-[10px] font-bold ${active ? 'bg-[#e04f3a] text-white' : 'bg-[#fff5f2] text-[#c83e2b] border border-[#c83e2b]/20'}">${badgeCount}</span>` : ''}
+          </button>
+        `;
+      }).join('');
+    }
+
+    function getFilteredDishes() {
+      const q = state.searchQuery.trim().toLowerCase();
+      return getAllDishes().filter(d => {
+        if (state.activeCategory !== 'all' && d.cat !== state.activeCategory) return false;
+        if (state.activeZone !== 'all' && d.zone !== state.activeZone) return false;
+        const effPrice = getDishPrice(d);
+        if (state.onlyPriced && (effPrice === null || effPrice === undefined)) return false;
+        if (q) {
+          const hay = (d.name + ' ' + (d.py || '') + ' ' + d.zone + ' ' + (d.pos || '')).toLowerCase();
+          if (!hay.includes(q)) return false;
+        }
+        return true;
+      });
+    }
+
+    function renderDishGrid() {
+      const grid = document.getElementById('dishGrid');
+      const empty = document.getElementById('emptyState');
+      const togglePricedBtn = document.getElementById('togglePricedBtn');
+      const toggleImgBtn = document.getElementById('toggleImgBtn');
+      const clearSearchBtn = document.getElementById('clearSearchBtn');
+
+      clearSearchBtn.classList.toggle('hidden', !state.searchQuery);
+      clearSearchBtn.classList.toggle('flex', Boolean(state.searchQuery));
+
+      togglePricedBtn.className = state.onlyPriced
+        ? 'px-2.5 py-2 rounded-xl text-xs font-semibold border border-[#c83e2b]/40 bg-[#fff5f2] text-[#b52f1d] whitespace-nowrap transition shrink-0'
+        : 'px-2.5 py-2 rounded-xl text-xs font-medium border border-stone-200/90 bg-white text-stone-600 hover:bg-stone-50 whitespace-nowrap transition shrink-0';
+
+      if (state.showImages) {
+        toggleImgBtn.textContent = '配图开';
+        toggleImgBtn.className = 'px-2.5 py-2 rounded-xl text-xs font-semibold border border-[#c83e2b]/40 bg-[#fff5f2] text-[#b52f1d] whitespace-nowrap transition shrink-0';
+        grid.className = 'grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4';
+      } else {
+        toggleImgBtn.textContent = '配图关';
+        toggleImgBtn.className = 'px-2.5 py-2 rounded-xl text-xs font-medium border border-stone-200/90 bg-white text-stone-600 hover:bg-stone-50 whitespace-nowrap transition shrink-0';
+        grid.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5';
+      }
+
+      const list = getFilteredDishes();
+      const allCount = getAllDishes().length;
+      document.getElementById('headerStats').textContent =
+        `全墙实录 ${allCount} 道菜 · 当前呈现 ${list.length} 道 · 复制自动剔除价格`;
+
+      if (list.length === 0) {
+        grid.innerHTML = '';
+        empty.classList.remove('hidden');
+        return;
+      }
+      empty.classList.add('hidden');
+
+      grid.innerHTML = list.map(dish => {
+        const qty = state.cart[dish.id] ? state.cart[dish.id].qty : 0;
+        const note = state.cart[dish.id] ? state.cart[dish.id].note : '';
+        const effPrice = getDishPrice(dish);
+        const hasPrice = typeof effPrice === 'number' && !isNaN(effPrice);
+        const isOverridden = Object.prototype.hasOwnProperty.call(state.priceOverrides, dish.id);
+
+        const isSpecial = dish.zone === '特色菜专区' || dish.cat === 'special';
+
+        if (state.showImages) {
+          return `
+            <div class="dish-card rounded-2xl sm:rounded-3xl border border-stone-200/90 overflow-hidden flex flex-col justify-between shadow-[0_2px_10px_rgba(28,25,23,0.03)] ${qty > 0 ? 'dish-selected' : ''}">
+              <div>
+                <!-- Boutique SVG Dish Artwork Header -->
+                <button
+                  type="button"
+                  data-open-detail="${dish.id}"
+                  aria-label="查看${escapeHtml(dish.name)}详情配图"
+                  class="art-zoom relative w-full aspect-[12/8.4] block overflow-hidden bg-stone-100 border-b border-stone-100 text-left focus:outline-none"
+                >
+                  ${renderDishSvg(dish, 'grid')}
+                  <span class="absolute top-2 left-2 px-2 py-0.5 rounded-full text-[10px] font-semibold backdrop-blur-md ${
+                    isSpecial
+                      ? 'bg-amber-950/75 text-amber-100'
+                      : 'bg-stone-900/60 text-stone-100'
+                  }">${escapeHtml(dish.pos || dish.zone)}</span>
+                  ${qty > 0 ? `<span class="absolute top-2 right-2 min-w-[24px] h-6 px-1.5 rounded-full seal-badge text-white text-xs font-bold flex items-center justify-center">×${qty}</span>` : ''}
+                  ${note ? `<span class="absolute bottom-2 left-2 max-w-[85%] truncate px-2 py-0.5 rounded-md bg-white/90 backdrop-blur text-[10px] font-semibold text-[#b52f1d] shadow-sm">${escapeHtml(note)}</span>` : ''}
+                </button>
+
+                <!-- Dish Title -->
+                <div class="px-3 sm:px-3.5 pt-2.5 pb-1">
+                  <div class="font-serif-cn text-sm sm:text-[15px] font-bold text-stone-900 leading-snug line-clamp-2">${escapeHtml(dish.name)}</div>
+                </div>
+              </div>
+
+              <!-- Price & Tactile Stepper Footer -->
+              <div class="px-3 sm:px-3.5 pb-3 pt-1.5 flex items-center justify-between gap-1.5">
+                <div class="min-w-0">
+                  ${
+                    hasPrice
+                      ? `<button type="button" data-edit-price="${dish.id}" class="text-left group flex items-baseline gap-0.5" title="点击修改参考单价">
+                           <span class="text-xs font-bold text-[#c83e2b]">¥</span>
+                           <span class="text-base sm:text-[17px] font-extrabold text-[#c83e2b] tracking-tight group-hover:underline">${effPrice}</span>
+                           <span class="text-[10px] text-stone-400">${isOverridden ? '已补' : '/例'}</span>
+                         </button>`
+                      : `<button type="button" data-edit-price="${dish.id}" class="text-[11px] px-2 py-0.5 rounded-lg bg-stone-100 hover:bg-stone-200/80 text-stone-500 font-medium transition truncate max-w-full">
+                           未标清·补记
+                         </button>`
+                  }
+                </div>
+
+                <div class="flex items-center gap-1 shrink-0">
+                  ${
+                    qty > 0
+                      ? `
+                        <button
+                          type="button"
+                          data-dec-id="${dish.id}"
+                          aria-label="减少${escapeHtml(dish.name)}"
+                          class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl border border-stone-300 bg-white hover:bg-stone-100 text-stone-700 font-bold text-sm flex items-center justify-center transition"
+                        >−</button>
+                        <span class="w-5 text-center text-xs sm:text-sm font-bold text-stone-900">${qty}</span>
+                      `
+                      : ''
+                  }
+                  <button
+                    type="button"
+                    data-inc-id="${dish.id}"
+                    aria-label="添加${escapeHtml(dish.name)}"
+                    class="w-7 h-7 sm:w-8 sm:h-8 rounded-xl btn-cinnabar text-white font-bold text-base flex items-center justify-center transition"
+                  >+</button>
+                </div>
+              </div>
+            </div>
+          `;
+        }
+
+        // Compact Text-Only Mode
+        return `
+          <div class="dish-card rounded-2xl border border-stone-200/90 p-3.5 flex items-center justify-between gap-3 ${qty > 0 ? 'dish-selected' : ''}">
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center gap-1.5 flex-wrap mb-1">
+                <span class="text-[10px] font-medium px-1.5 py-0.5 rounded bg-stone-100 text-stone-600">${escapeHtml(dish.pos || dish.zone)}</span>
+                ${note ? `<span class="text-[10px] font-medium px-1.5 py-0.5 rounded bg-[#fff5f2] text-[#c83e2b]">${escapeHtml(note)}</span>` : ''}
+              </div>
+              <button type="button" data-open-detail="${dish.id}" class="font-serif-cn text-sm sm:text-[15px] font-bold text-stone-900 hover:text-[#c83e2b] text-left leading-snug break-words">${escapeHtml(dish.name)}</button>
+              <div class="mt-1">
+                ${
+                  hasPrice
+                    ? `<button type="button" data-edit-price="${dish.id}" class="text-sm font-bold text-[#c83e2b] hover:underline">¥${effPrice} <span class="text-[10px] font-normal text-stone-400">/例${isOverridden ? ' (已补)' : ''}</span></button>`
+                    : `<button type="button" data-edit-price="${dish.id}" class="text-[11px] px-2 py-0.5 rounded bg-stone-100 hover:bg-stone-200 text-stone-500">价格未标清 · 点击补记</button>`
+                }
+              </div>
+            </div>
+            <div class="flex items-center gap-1.5 shrink-0">
+              ${qty > 0 ? `<button type="button" data-dec-id="${dish.id}" class="w-8 h-8 rounded-xl border border-stone-300 bg-white text-stone-700 font-bold">−</button><span class="w-5 text-center text-sm font-bold">${qty}</span>` : ''}
+              <button type="button" data-inc-id="${dish.id}" class="w-8 h-8 rounded-xl btn-cinnabar text-white font-bold">+</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderBottomBarAndDrawer() {
+      const { dishCount, totalPortions, knownSum, unpricedCount, orderedItems, structure } = getCartStats();
+
+      const badge = document.getElementById('cartBadge');
+      const title = document.getElementById('cartSummaryTitle');
+      const sub = document.getElementById('cartSummarySub');
+      const quickCopyBtn = document.getElementById('quickCopyBtn');
+      const drawerCopyBtn = document.getElementById('drawerCopyBtn');
+      const balanceHintBar = document.getElementById('balanceHintBar');
+      const drawerStructureBar = document.getElementById('drawerStructureBar');
+
+      if (dishCount === 0) {
+        badge.classList.add('hidden');
+        badge.classList.remove('flex');
+        title.textContent = '暂未点菜';
+        sub.textContent = '轻触菜品卡片 + 号即可加入点菜单';
+        quickCopyBtn.disabled = true;
+        drawerCopyBtn.disabled = true;
+        balanceHintBar.textContent = '点菜贴士：点击菜品插画可放大预览并备注忌口；未标清价格支持店内随手补记';
+        drawerStructureBar.classList.add('hidden');
+      } else {
+        badge.textContent = String(totalPortions);
+        badge.classList.remove('hidden');
+        badge.classList.add('flex');
+        title.textContent = `已选 ${dishCount} 道菜（共 ${totalPortions} 份）`;
+        sub.textContent = unpricedCount > 0
+          ? `已知小计 ¥${knownSum} · 另含 ${unpricedCount} 道未标价菜`
+          : `参考总计 ¥${knownSum} · 复制自动去价格`;
+        quickCopyBtn.disabled = false;
+        drawerCopyBtn.disabled = false;
+
+        const structText = formatStructureSummary(structure, dishCount);
+        balanceHintBar.textContent = structText;
+        drawerStructureBar.textContent = structText;
+        drawerStructureBar.classList.remove('hidden');
+      }
+
+      const clearBtn = document.getElementById('clearCartBtn');
+      clearBtn.textContent = state.clearConfirmPending ? '再次点击确认清空' : '清空已点';
+      clearBtn.className = state.clearConfirmPending
+        ? 'px-2.5 py-1 rounded-lg text-xs font-bold bg-red-600 text-white transition'
+        : 'px-2.5 py-1 rounded-lg text-xs font-medium text-red-700 hover:bg-red-50 transition';
+
+      document.getElementById('drawerSubHeader').textContent =
+        dishCount > 0 ? `共 ${dishCount} 道菜 / ${totalPortions} 份 · 复制文本严格不含价格` : '尚未选择菜品';
+
+      const listEl = document.getElementById('cartItemsList');
+      if (orderedItems.length === 0) {
+        listEl.innerHTML = `
+          <div class="py-10 text-center text-stone-400 text-xs bg-white rounded-2xl border border-dashed border-stone-200">
+            点菜单空空如也，去挑几道招牌菜吧
+          </div>
+        `;
+      } else {
+        listEl.innerHTML = orderedItems.map(({ dish, qty, note, effectivePrice }) => `
+          <div class="bg-white rounded-2xl p-3 border border-stone-200/80 shadow-sm">
+            <div class="flex items-center justify-between gap-2.5">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <div class="w-14 h-10 rounded-xl overflow-hidden shrink-0 border border-stone-200/70">${renderDishSvg(dish, 'cart')}</div>
+                <div class="min-w-0">
+                  <div class="font-serif-cn text-sm font-bold text-stone-900 truncate">${escapeHtml(dish.name)}</div>
+                  <div class="text-[11px] text-stone-500">
+                    ${typeof effectivePrice === 'number' ? `参考 ¥${effectivePrice * qty}` : '墙面未标清'}
+                  </div>
+                </div>
+              </div>
+              <div class="flex items-center gap-1.5 shrink-0">
+                <button type="button" data-dec-id="${dish.id}" class="w-7 h-7 rounded-lg border border-stone-300 bg-white text-stone-700 font-bold text-sm flex items-center justify-center">−</button>
+                <span class="w-5 text-center text-xs font-bold text-stone-900">${qty}</span>
+                <button type="button" data-inc-id="${dish.id}" class="w-7 h-7 rounded-lg btn-cinnabar text-white font-bold text-sm flex items-center justify-center">+</button>
+              </div>
+            </div>
+            <div class="mt-2">
+              <input
+                type="text"
+                data-note-id="${dish.id}"
+                value="${escapeHtml(note)}"
+                placeholder="单品口味备注（如：微辣、免葱、多醋）"
+                class="w-full px-2.5 py-1 text-xs bg-stone-50 border border-stone-200 rounded-lg focus:bg-white focus:outline-none focus:border-[#c83e2b]"
+              />
+            </div>
+          </div>
+        `).join('');
+      }
+
+      document.querySelectorAll('.copy-fmt-btn').forEach(btn => {
+        const active = btn.getAttribute('data-copy-fmt') === state.copyFormat;
+        btn.className = 'copy-fmt-btn px-2.5 py-1 rounded-lg font-medium transition ' +
+          (active ? 'bg-stone-900 text-white shadow-sm' : 'text-stone-600 hover:bg-stone-200/70');
+      });
+
+      document.getElementById('includeQtyCheckbox').checked = state.copyIncludeQty;
+      document.getElementById('includeNoteCheckbox').checked = state.copyIncludeNotes;
+      const overallInput = document.getElementById('overallNoteInput');
+      if (document.activeElement !== overallInput) {
+        overallInput.value = state.overallNote;
+      }
+
+      document.getElementById('copyPreviewArea').value =
+        orderedItems.length > 0 ? buildCopyText() : '（选菜后此处实时生成纯菜名清单，自动剥离所有价格数字）';
+
+      document.getElementById('drawerTotalAmount').textContent = `¥${knownSum}`;
+      document.getElementById('drawerUnpricedHint').textContent =
+        unpricedCount > 0 ? `另有 ${unpricedCount} 道菜墙面价格未标清，未计入参考总计` : '';
+    }
+
+    function renderAll() {
+      renderCategoryTabs();
+      renderDishGrid();
+      renderBottomBarAndDrawer();
+    }
+
+    // Dish Detail Preview Modal Functions
+    function openDetailModal(dishId) {
+      state.detailDishId = dishId;
+      renderDetailModalContent();
+      document.getElementById('detailModal').classList.remove('hidden');
+    }
+
+    function closeDetailModal() {
+      state.detailDishId = null;
+      document.getElementById('detailModal').classList.add('hidden');
+    }
+
+    function renderDetailModalContent() {
+      const dish = getAllDishes().find(d => d.id === state.detailDishId);
+      if (!dish) return;
+      const qty = state.cart[dish.id] ? state.cart[dish.id].qty : 0;
+      const note = state.cart[dish.id] ? state.cart[dish.id].note : '';
+      const effPrice = getDishPrice(dish);
+      const hasPrice = typeof effPrice === 'number' && !isNaN(effPrice);
+      const catObj = CATEGORIES.find(c => c.id === dish.cat);
+
+      document.getElementById('detailArtBox').innerHTML = renderDishSvg(dish, 'detail');
+      document.getElementById('detailDishTitle').textContent = dish.name;
+      document.getElementById('detailMetaBadges').innerHTML = `
+        <span class="px-2 py-0.5 rounded-md bg-stone-200/80 text-stone-700 text-[11px] font-semibold">${escapeHtml(dish.pos || dish.zone)}</span>
+        ${catObj ? `<span class="px-2 py-0.5 rounded-md bg-amber-100/90 text-amber-900 text-[11px] font-semibold">${escapeHtml(catObj.label)}</span>` : ''}
+      `;
+      document.getElementById('detailPriceArea').innerHTML = hasPrice
+        ? `<div class="text-xl font-extrabold text-[#c83e2b]">¥${effPrice}<span class="text-xs font-normal text-stone-500">/例</span></div>`
+        : `<div class="text-xs font-medium text-stone-400 bg-stone-100 px-2.5 py-1 rounded-lg">价格未标清</div>`;
+
+      const noteInput = document.getElementById('detailNoteInput');
+      if (document.activeElement !== noteInput) {
+        noteInput.value = note;
+      }
+
+      document.getElementById('detailStepperBox').innerHTML = qty > 0
+        ? `
+          <button type="button" data-dec-id="${dish.id}" class="w-9 h-9 rounded-xl border border-stone-300 bg-white text-stone-800 font-bold text-lg flex items-center justify-center">−</button>
+          <span class="w-7 text-center text-base font-bold text-stone-900">${qty}</span>
+          <button type="button" data-inc-id="${dish.id}" class="w-9 h-9 rounded-xl btn-cinnabar text-white font-bold text-lg flex items-center justify-center">+</button>
+        `
+        : `
+          <button type="button" data-inc-id="${dish.id}" class="px-5 py-2.5 rounded-xl btn-cinnabar text-white text-xs font-bold">+ 加入点菜单</button>
+        `;
+    }
+
+    function openDrawer() {
+      state.clearConfirmPending = false;
+      renderBottomBarAndDrawer();
+      document.getElementById('cartDrawer').classList.remove('hidden');
+    }
+
+    function closeDrawer() {
+      state.clearConfirmPending = false;
+      document.getElementById('cartDrawer').classList.add('hidden');
+    }
+
+    function openCustomDishModal() {
+      state.modalMode = 'custom';
+      document.getElementById('editModalTitle').textContent = '添加主食 / 自定义菜品';
+      document.getElementById('customDishFields').classList.remove('hidden');
+      document.getElementById('priceEditFields').classList.add('hidden');
+      document.getElementById('customDishName').value = '';
+      document.getElementById('customDishPrice').value = '';
+      document.getElementById('editModal').classList.remove('hidden');
+      setTimeout(() => document.getElementById('customDishName').focus(), 50);
+    }
+
+    function openPriceEditModal(dishId) {
+      const dish = getAllDishes().find(d => d.id === dishId);
+      if (!dish) return;
+      state.modalMode = 'price';
+      state.editingDishId = dishId;
+      document.getElementById('editModalTitle').textContent = '补充 / 修改参考单价';
+      document.getElementById('customDishFields').classList.add('hidden');
+      document.getElementById('priceEditFields').classList.remove('hidden');
+      document.getElementById('priceEditDishLabel').textContent = '菜品：' + dish.name;
+      const cur = getDishPrice(dish);
+      document.getElementById('overridePriceInput').value = (typeof cur === 'number' && !isNaN(cur)) ? String(cur) : '';
+      document.getElementById('editModal').classList.remove('hidden');
+      setTimeout(() => document.getElementById('overridePriceInput').focus(), 50);
+    }
+
+    function closeEditModal() {
+      document.getElementById('editModal').classList.add('hidden');
+    }
+
+    function confirmModalAction() {
+      if (state.modalMode === 'custom') {
+        const name = document.getElementById('customDishName').value.trim();
+        const priceRaw = document.getElementById('customDishPrice').value.trim();
+        if (!name) {
+          showToast('请输入菜品或主食名称');
+          return;
+        }
+        const parsedPrice = priceRaw !== '' ? Number(priceRaw) : null;
+        const newDish = {
+          id: 'custom_' + Date.now(),
+          name: name,
+          price: (parsedPrice !== null && !isNaN(parsedPrice) && parsedPrice >= 0) ? parsedPrice : null,
+          cat: 'cold_staple',
+          zone: '自选加点',
+          pos: '手动添加',
+          py: ''
+        };
+        state.customDishes.unshift(newDish);
+        state.cart[newDish.id] = { qty: 1, note: '' };
+        saveState();
+        closeEditModal();
+        renderAll();
+        showToast('已添加并点选：' + name);
+      } else if (state.modalMode === 'price' && state.editingDishId) {
+        const raw = document.getElementById('overridePriceInput').value.trim();
+        if (raw === '') {
+          delete state.priceOverrides[state.editingDishId];
+        } else {
+          const val = Number(raw);
+          if (!isNaN(val) && val >= 0) {
+            state.priceOverrides[state.editingDishId] = val;
+          }
+        }
+        saveState();
+        closeEditModal();
+        renderAll();
+        if (state.detailDishId === state.editingDishId) {
+          renderDetailModalContent();
+        }
+        showToast('单价已更新');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadSavedState();
+      renderAll();
+
+      const searchInput = document.getElementById('searchInput');
+      searchInput.addEventListener('input', (e) => {
+        state.searchQuery = e.target.value;
+        renderDishGrid();
+      });
+
+      document.getElementById('clearSearchBtn').addEventListener('click', () => {
+        state.searchQuery = '';
+        searchInput.value = '';
+        renderDishGrid();
+      });
+
+      document.getElementById('zoneSelect').addEventListener('change', (e) => {
+        state.activeZone = e.target.value;
+        renderDishGrid();
+      });
+
+      document.getElementById('togglePricedBtn').addEventListener('click', () => {
+        state.onlyPriced = !state.onlyPriced;
+        renderDishGrid();
+      });
+
+      document.getElementById('toggleImgBtn').addEventListener('click', () => {
+        state.showImages = !state.showImages;
+        saveState();
+        renderDishGrid();
+      });
+
+      document.getElementById('resetFiltersBtn').addEventListener('click', () => {
+        state.activeCategory = 'all';
+        state.activeZone = 'all';
+        state.searchQuery = '';
+        state.onlyPriced = false;
+        document.getElementById('searchInput').value = '';
+        document.getElementById('zoneSelect').value = 'all';
+        renderAll();
+      });
+
+      document.body.addEventListener('click', (e) => {
+        const btn = e.target.closest('button');
+        if (!btn) return;
+
+        if (btn.hasAttribute('data-cat-id')) {
+          state.activeCategory = btn.getAttribute('data-cat-id');
+          renderAll();
+          return;
+        }
+        if (btn.hasAttribute('data-inc-id')) {
+          updateQty(btn.getAttribute('data-inc-id'), 1);
+          return;
+        }
+        if (btn.hasAttribute('data-dec-id')) {
+          updateQty(btn.getAttribute('data-dec-id'), -1);
+          return;
+        }
+        if (btn.hasAttribute('data-quick-add')) {
+          quickAddByName(btn.getAttribute('data-quick-add'));
+          return;
+        }
+        if (btn.hasAttribute('data-edit-price')) {
+          openPriceEditModal(btn.getAttribute('data-edit-price'));
+          return;
+        }
+        if (btn.hasAttribute('data-open-detail')) {
+          openDetailModal(btn.getAttribute('data-open-detail'));
+          return;
+        }
+        if (btn.hasAttribute('data-detail-flavor')) {
+          const flv = btn.getAttribute('data-detail-flavor');
+          const id = state.detailDishId;
+          if (!id) return;
+          if (!state.cart[id]) {
+            state.cart[id] = { qty: 1, note: flv };
+          } else {
+            const cur = (state.cart[id].note || '').trim();
+            state.cart[id].note = cur ? (cur.includes(flv) ? cur : cur + '、' + flv) : flv;
+          }
+          saveState();
+          renderAll();
+          renderDetailModalContent();
+          return;
+        }
+        if (btn.hasAttribute('data-copy-fmt')) {
+          state.copyFormat = btn.getAttribute('data-copy-fmt');
+          saveState();
+          renderBottomBarAndDrawer();
+          return;
+        }
+        if (btn.hasAttribute('data-overall-tag')) {
+          const tag = btn.getAttribute('data-overall-tag');
+          const cur = state.overallNote.trim();
+          state.overallNote = cur ? (cur.includes(tag) ? cur : cur + '、' + tag) : tag;
+          saveState();
+          renderBottomBarAndDrawer();
+        }
+      });
+
+      document.getElementById('detailNoteInput').addEventListener('input', (e) => {
+        const id = state.detailDishId;
+        if (!id) return;
+        if (!state.cart[id]) {
+          state.cart[id] = { qty: 1, note: e.target.value };
+        } else {
+          state.cart[id].note = e.target.value;
+        }
+        saveState();
+        renderAll();
+      });
+
+      document.getElementById('detailEditPriceBtn').addEventListener('click', () => {
+        if (state.detailDishId) openPriceEditModal(state.detailDishId);
+      });
+
+      document.getElementById('closeDetailModalBtn').addEventListener('click', closeDetailModal);
+      document.getElementById('detailModalBackdrop').addEventListener('click', closeDetailModal);
+
+      document.getElementById('cartItemsList').addEventListener('input', (e) => {
+        const input = e.target;
+        if (input && input.hasAttribute('data-note-id')) {
+          const id = input.getAttribute('data-note-id');
+          if (state.cart[id]) {
+            state.cart[id].note = input.value;
+            saveState();
+            document.getElementById('copyPreviewArea').value = buildCopyText();
+            renderDishGrid();
+          }
+        }
+      });
+
+      document.getElementById('overallNoteInput').addEventListener('input', (e) => {
+        state.overallNote = e.target.value;
+        saveState();
+        const { orderedItems } = getCartStats();
+        document.getElementById('copyPreviewArea').value =
+          orderedItems.length > 0 ? buildCopyText() : '（选菜后此处实时生成纯菜名清单，自动剥离所有价格数字）';
+      });
+
+      document.getElementById('includeQtyCheckbox').addEventListener('change', (e) => {
+        state.copyIncludeQty = e.target.checked;
+        saveState();
+        renderBottomBarAndDrawer();
+      });
+
+      document.getElementById('includeNoteCheckbox').addEventListener('change', (e) => {
+        state.copyIncludeNotes = e.target.checked;
+        saveState();
+        renderBottomBarAndDrawer();
+      });
+
+      document.getElementById('openCartBtn').addEventListener('click', openDrawer);
+      document.getElementById('openDrawerActionBtn').addEventListener('click', openDrawer);
+      document.getElementById('closeCartBtn').addEventListener('click', closeDrawer);
+      document.getElementById('cartBackdrop').addEventListener('click', closeDrawer);
+
+      document.getElementById('quickCopyBtn').addEventListener('click', copyDishNames);
+      document.getElementById('drawerCopyBtn').addEventListener('click', copyDishNames);
+
+      document.getElementById('clearCartBtn').addEventListener('click', () => {
+        const { dishCount } = getCartStats();
+        if (dishCount === 0) return;
+        if (!state.clearConfirmPending) {
+          state.clearConfirmPending = true;
+          renderBottomBarAndDrawer();
+          return;
+        }
+        state.cart = {};
+        state.overallNote = '';
+        state.clearConfirmPending = false;
+        saveState();
+        renderAll();
+        showToast('已清空已点菜品');
+      });
+
+      document.getElementById('openCustomModalBtn').addEventListener('click', openCustomDishModal);
+      document.getElementById('cancelModalBtn').addEventListener('click', closeEditModal);
+      document.getElementById('editModalBackdrop').addEventListener('click', closeEditModal);
+      document.getElementById('confirmModalBtn').addEventListener('click', confirmModalAction);
+
+      document.getElementById('customDishName').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') confirmModalAction();
+      });
+      document.getElementById('overridePriceInput').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') confirmModalAction();
+      });
+    });
+  </script>
+</body>
+</html>
